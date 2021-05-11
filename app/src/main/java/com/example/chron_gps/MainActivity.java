@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,17 +26,26 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_UPDATE_INTERVAL = 30;
     public static final int FAST_UPDATE_INTERVAL = 5;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
+    private static final String FILE_NAME = "example.txt";
+
+    //f
+
+
+    EditText mEditText;
 
     // references to the UI elements
 
     TextView tv_lat, tv_lon, tv_altitude, tv_accuracy, tv_speed, tv_sensor, tv_updates, tv_address, tv_wayPointsCounts;
-    Button btn_newWaypoint, btn_showWayPointList;
+    Button btn_newWaypoint, btn_showWayPointList, btn_save;
 
     Switch sw_locationupdates, sw_gps;
 
@@ -58,10 +68,49 @@ public class MainActivity extends AppCompatActivity {
     FusedLocationProviderClient fusedLocationProviderClient;
 
 
+
+
+    public void save(View v) {
+        String text = mEditText.getText().toString();
+        //tv_lat.setText(String.valueOf(location.getLatitude()));
+        //String text = tv_lat.setText(String.valueOf(location.getLatitude()));
+        FileOutputStream fos = null;
+
+        // plhrofories hmera
+
+        //fileNEME= date.now().toString + ".txt"
+        try {
+            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            // string = fos.read
+
+            //
+            // string = string + text ----->(getbytes)
+            fos.write(text.getBytes());
+
+            mEditText.getText().clear();
+            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mEditText = findViewById(R.id.edit_text);
 
         // give each UI variable a value
 
