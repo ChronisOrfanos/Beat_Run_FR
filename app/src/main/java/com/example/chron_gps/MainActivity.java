@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     // references to the UI elements
 
     TextView tv_lat, tv_lon, tv_altitude, tv_accuracy, tv_speed, tv_sensor, tv_updates, tv_address, tv_wayPointsCounts;
-    Button btn_newWaypoint, btn_showWayPointList, btn_save;
+    Button btn_newWaypoint, btn_showWayPointList, btn_save, btn_music;
 
     Switch sw_locationupdates, sw_gps;
 
@@ -128,6 +128,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //gia thn mousikh
+        btn_music = findViewById(R.id.btn_music);
+        btn_music.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMusic_List();
+
+            }
+        });
 
         //gia to grapsimo sthn othonh
         mEditText = findViewById(R.id.edit_text);
@@ -220,6 +230,8 @@ public class MainActivity extends AppCompatActivity {
         updateGPS();
 
     }// end onCreate method
+
+
 
     private void stopLocationUpdates() {
         tv_updates.setText("Location is NOT being tracked");
@@ -402,5 +414,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
+
+    //Gia thn mousikh
+    public void openMusic_List(){
+        Intent intent = new Intent(this, Music_List.class);
+        startActivity(intent);
+
+    }
 }
+
 //// Mouaxaxaxaxa
