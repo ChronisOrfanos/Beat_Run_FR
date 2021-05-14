@@ -229,7 +229,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="24dp"
         android:onClick="save"
-        android:text="save"
+        android:text="save error"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.811"
         app:layout_constraintStart_toStartOf="parent"

@@ -29,18 +29,33 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_UPDATE_INTERVAL = 30;
     public static final int FAST_UPDATE_INTERVAL = 5;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
-    private static final String FILE_NAME = "example.txt";
+    private static final String FILE_NAME = "errors.txt";
+    private static final String FILE_NAME2 = "example_chron.txt";
+    private static final String FILE_NAME3 = "peirama.txt";
 
-    //f
+    int Update_pointer = 0;
+    int Error_pointer = 0;
+    int Peirama = 0;
+    int ax=0;
+    ArrayList<String> Table = new ArrayList<String>();
+    ArrayList<String> Table_peirama = new ArrayList<String>();
+
+    ArrayList<String> Table_Errors = new ArrayList<String>();
 
 
     EditText mEditText;
+
+    Calendar calendar = Calendar.getInstance();
+    String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
 
     // references to the UI elements
 
@@ -72,20 +87,24 @@ public class MainActivity extends AppCompatActivity {
 
     public void save(View v) {
         String text = mEditText.getText().toString();
-        //tv_lat.setText(String.valueOf(location.getLatitude()));
-        //String text = tv_lat.setText(String.valueOf(location.getLatitude()));
         FileOutputStream fos = null;
+        Error_pointer += 1;
+        Table_Errors.add("Error no:"+Error_pointer+" Error: "+ text+ " Date: "+ currentDate);
+
+
+
 
         // plhrofories hmera
-
-        //fileNEME= date.now().toString + ".txt"
         try {
             fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
-            // string = fos.read
+            for (int i=0; i< Table_Errors.size(); i++)
+                fos.write(((Table_Errors.get(i)+"\n").getBytes()));
 
-            //
-            // string = string + text ----->(getbytes)
-            fos.write(text.getBytes());
+
+            //fos.write(text.getBytes());
+
+
+
 
             mEditText.getText().clear();
             Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
@@ -110,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //gia to grapsimo sthn othonh
         mEditText = findViewById(R.id.edit_text);
 
         // give each UI variable a value
@@ -266,6 +286,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     currentLocation = location;
 
+
+
                     //updateUIValues(location);
                 }
             });
@@ -280,39 +302,41 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //private void updateGPS() {
-        //
-        //
-        //
-         //fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MainActivity.this);
-
-         //if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
-             //user provided the permission
-             //fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                 //@Override
-                 //public void onSuccess(Location location) {
-                     //we got permissions.Put the values of location.XXX into the UI components.
-                     //if (location !=null){
-                         //updateUIValues(location);
-                     //}
-                 //}
-             //});
-         //}
-         //else {
-             //permissions not granted yet.
-
-             //if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-                 //requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_FINE_LOCATION);
-             //}
-         //}
-    //}
-
     private void updateUIValues(Location location) {
         // update all of the text view objects with a ne Location.
 
         tv_lat.setText(String.valueOf(location.getLatitude()));
         tv_lon.setText(String.valueOf(location.getLongitude()));
         tv_accuracy.setText(String.valueOf(location.getAccuracy()));
+        String Latitude = String.valueOf(location.getLatitude());
+        String Longtitude = String.valueOf(location.getLongitude());
+        String Altitude = String.valueOf(location.getAltitude());
+        String Accuracy = String.valueOf(location.getAccuracy());
+        String Speed = String.valueOf(location.getSpeed());
+        FileOutputStream foss = null;
+        Update_pointer += 1;
+
+        if (currentDate =="May 13, 2021"){
+            Update_pointer =7;
+        }
+
+        // ArrayList<String> Table = new ArrayList<String>();
+        //Table.add(Latitude+" "+" "+Longtitude+" "+" "+Altitude+" "+" "+Accuracy+" "+Speed+" ");
+        //if( Update_pointer==1) {
+            Table.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+"Date: "+currentDate);
+        //}
+
+
+        //if (Update_pointer >1){
+            //Table.add("Enhmerwsh no:"+Update_pointer+" "+"Lat:"+Latitude+" "+"Long:"+Longtitude+" "+"Alt:"+Altitude+" "+"Acc:"+Accuracy+" "+"Speed:"+Speed+"Date: "+currentDate);
+            //ax=1;
+        //}
+        //Table.add(Longtitude);
+        //Table.add(Altitude);
+        //Table.add(Accuracy);
+        //Table.add(Speed);
+        //Table.add(Update_Pointer);
+
 
         if (location.hasAltitude()) {
             tv_altitude.setText(String.valueOf(location.getAltitude()));
@@ -344,6 +368,38 @@ public class MainActivity extends AppCompatActivity {
 
         //show the number of wayponits saved.
         tv_wayPointsCounts.setText(Integer.toString(savedLocations.size()));
+
+        try {
+            foss = openFileOutput(FILE_NAME2, MODE_PRIVATE);
+            //foss.write((Table.get(0)).getBytes());
+            //foss.write((Table.get(1)).getBytes());
+            //foss.write((Update_Pointer).getBytes());
+            //if(ax==1){
+                      for (int i=0; i< Table.size(); i++)
+                      foss.write(((Table.get(i)+"\n").getBytes()));
+            //foss.write((Table.get(Update_pointer).getBytes()));
+            //}
+            //else {
+                  //foss.write((Table.get(0).getBytes()));
+
+            //}
+
+            //foss.write(("Latitude "+Latitude+" Longtitude "+Longtitude+" Altitude "+Altitude+" Accuracy "+Accuracy+" Speed "+Speed+Table.get(0)).getBytes());
+            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (foss != null){
+                try {
+                    foss.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
 
     }
 }
