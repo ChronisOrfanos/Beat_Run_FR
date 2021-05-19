@@ -21,11 +21,12 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Music_List extends AppCompatActivity {
     ListView listView;
-    String[] items;
+    ArrayList <String> items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +78,12 @@ public class Music_List extends AppCompatActivity {
     {
         final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
 
-        items = new String[mySongs.size()];
+        items = new ArrayList<String>();
 
         for (int i = 0; i<mySongs.size();i++)
         {
-            items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
+            items.add(mySongs.get(i).getName().toString().replace(".mp3", "").replace(".wav", ""));
+            Collections.sort(items);
         }
 
         /*ArrayAdapter<String> myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
@@ -107,7 +109,7 @@ public class Music_List extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return items.length;
+            return items.size();
         }
 
         @Override
@@ -125,7 +127,7 @@ public class Music_List extends AppCompatActivity {
             View myView =  getLayoutInflater().inflate(R.layout.list_item, null);
             TextView textsong = myView.findViewById(R.id.txtsongname);
             textsong.setSelected(true);
-            textsong.setText(items[i]);
+            textsong.setText(items.get(i));
 
             return myView;
         }

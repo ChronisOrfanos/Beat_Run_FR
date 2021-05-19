@@ -1,6 +1,7 @@
 package com.example.chron_gps;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -30,6 +31,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.time.*;
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.ArrayList;
@@ -38,17 +41,13 @@ public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_UPDATE_INTERVAL = 30;
     public static final int FAST_UPDATE_INTERVAL = 5;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
-    private static final String FILE_NAME = "errors.txt";
-    private static final String FILE_NAME2 = "example_chron.txt";
-    private static final String FILE_NAME3 = "peirama.txt";
+    private static String FILE_NAME ;
+    private static String FILE_NAME2 ;
 
     int Update_pointer = 0;
     int Error_pointer = 0;
-    int Peirama = 0;
-    int ax=0;
-    ArrayList<String> Table = new ArrayList<String>();
-    ArrayList<String> Table_peirama = new ArrayList<String>();
 
+    ArrayList<String> Table = new ArrayList<String>();
     ArrayList<String> Table_Errors = new ArrayList<String>();
 
 
@@ -85,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void save(View v) {
         String text = mEditText.getText().toString();
         FileOutputStream fos = null;
@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         // plhrofories hmera
         try {
+            FILE_NAME = LocalDate.now().toString()+"Errors.txt";
             fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
             for (int i=0; i< Table_Errors.size(); i++)
                 fos.write(((Table_Errors.get(i)+"\n").getBytes()));
@@ -170,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
 
         //event that is triggered whenever the update interval is met.
         locationCallBack = new LocationCallback() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
                 super.onLocationResult(locationResult);
@@ -289,6 +291,7 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             //user provided the permission
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onSuccess(Location location) {
                     //we got permissions.Put the values of location. XXX into the UI components.
@@ -314,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateUIValues(Location location) {
         // update all of the text view objects with a ne Location.
 
@@ -382,6 +386,8 @@ public class MainActivity extends AppCompatActivity {
         tv_wayPointsCounts.setText(Integer.toString(savedLocations.size()));
 
         try {
+
+            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
             foss = openFileOutput(FILE_NAME2, MODE_PRIVATE);
             //foss.write((Table.get(0)).getBytes());
             //foss.write((Table.get(1)).getBytes());
