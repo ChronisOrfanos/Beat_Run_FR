@@ -30,12 +30,16 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Time;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_UPDATE_INTERVAL = 30;
@@ -55,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
     Calendar calendar = Calendar.getInstance();
     String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
+    String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+
+
 
     // references to the UI elements
 
@@ -89,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         String text = mEditText.getText().toString();
         FileOutputStream fos = null;
         Error_pointer += 1;
-        Table_Errors.add("Error no:"+Error_pointer+" Error: "+ text+ " Date: "+ currentDate);
+        Table_Errors.add("Error no:"+Error_pointer+" Error: "+ text+ " Date: "+ currentDate + " Time: "+ currentTime);
 
 
 
@@ -97,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         // plhrofories hmera
         try {
             FILE_NAME = LocalDate.now().toString()+"Errors.txt";
-            fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+            fos = openFileOutput(FILE_NAME, MODE_APPEND);
             for (int i=0; i< Table_Errors.size(); i++)
                 fos.write(((Table_Errors.get(i)+"\n").getBytes()));
 
@@ -332,26 +339,9 @@ public class MainActivity extends AppCompatActivity {
         FileOutputStream foss = null;
         Update_pointer += 1;
 
-        if (currentDate =="May 13, 2021"){
-            Update_pointer =7;
-        }
-
-        // ArrayList<String> Table = new ArrayList<String>();
-        //Table.add(Latitude+" "+" "+Longtitude+" "+" "+Altitude+" "+" "+Accuracy+" "+Speed+" ");
-        //if( Update_pointer==1) {
-            Table.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+"Date: "+currentDate);
-        //}
+            Table.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+" Date: "+currentDate + " Time: "+ currentTime);
 
 
-        //if (Update_pointer >1){
-            //Table.add("Enhmerwsh no:"+Update_pointer+" "+"Lat:"+Latitude+" "+"Long:"+Longtitude+" "+"Alt:"+Altitude+" "+"Acc:"+Accuracy+" "+"Speed:"+Speed+"Date: "+currentDate);
-            //ax=1;
-        //}
-        //Table.add(Longtitude);
-        //Table.add(Altitude);
-        //Table.add(Accuracy);
-        //Table.add(Speed);
-        //Table.add(Update_Pointer);
 
 
         if (location.hasAltitude()) {
@@ -388,11 +378,8 @@ public class MainActivity extends AppCompatActivity {
         try {
 
             FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
-            foss = openFileOutput(FILE_NAME2, MODE_PRIVATE);
-            //foss.write((Table.get(0)).getBytes());
-            //foss.write((Table.get(1)).getBytes());
-            //foss.write((Update_Pointer).getBytes());
-            //if(ax==1){
+            foss = openFileOutput(FILE_NAME2, MODE_APPEND);
+
                       for (int i=0; i< Table.size(); i++)
                       foss.write(((Table.get(i)+"\n").getBytes()));
             //foss.write((Table.get(Update_pointer).getBytes()));
@@ -402,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
 
             //}
 
-            //foss.write(("Latitude "+Latitude+" Longtitude "+Longtitude+" Altitude "+Altitude+" Accuracy "+Accuracy+" Speed "+Speed+Table.get(0)).getBytes());
+
             Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -22,6 +22,7 @@ import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Music_Player extends AppCompatActivity {
 
@@ -87,6 +88,7 @@ public class Music_Player extends AppCompatActivity {
         Bundle bundle = i.getExtras();
 
         mySongs = (ArrayList) bundle.getParcelableArrayList("songs");
+        Collections.sort(mySongs);
         String songName = i.getStringExtra("songname");
         position = bundle.getInt("pos", 0);
         txtsname.setSelected(true);
