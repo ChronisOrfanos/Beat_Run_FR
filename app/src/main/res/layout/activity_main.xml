@@ -4,105 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#8F8F8F"
     tools:context=".MainActivity">
+
 
     <EditText
         android:id="@+id/edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
+
+        android:foregroundTint="#FFEB3B"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.757"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.236"></EditText>
-
-    <TextView
-        android:id="@+id/tv_labellat"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Lat:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_lat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="0.00"
-        app:layout_constraintStart_toEndOf="@+id/tv_labellat"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_labellon"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="lon:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labellat" />
-
-    <TextView
-        android:id="@+id/tv_lon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="0.00"
-        app:layout_constraintStart_toEndOf="@+id/tv_labellon"
-        app:layout_constraintTop_toBottomOf="@+id/tv_lat" />
-
-    <TextView
-        android:id="@+id/tv_labelaltitude"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Altitude:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labellon" />
-
-    <TextView
-        android:id="@+id/tv_altitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0.00"
-        app:layout_constraintStart_toEndOf="@+id/tv_labelaltitude"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelaltitude" />
-
-    <TextView
-        android:id="@+id/tv_labelaccuracy"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Accuracy:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelaltitude" />
-
-    <TextView
-        android:id="@+id/tv_accuracy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0.00"
-        app:layout_constraintStart_toEndOf="@+id/tv_labelaccuracy"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelaccuracy" />
-
-    <TextView
-        android:id="@+id/tv_labelspeed"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Speed:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelaccuracy" />
-
-    <TextView
-        android:id="@+id/tv_speed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0.00"
-        app:layout_constraintStart_toEndOf="@+id/tv_labelspeed"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelspeed" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"></EditText>
 
     <TextView
         android:id="@+id/tv_labelsensor"
@@ -110,6 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Sensor:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#E8D10B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_gps" />
 
@@ -118,6 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cell Tower + Wifi"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#E8D10B"
+        android:textColorHighlight="#FAF1F1"
         app:layout_constraintStart_toEndOf="@+id/tv_labelsensor"
         app:layout_constraintTop_toTopOf="@+id/tv_labelsensor" />
 
@@ -126,6 +47,8 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Updates:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#E8D10B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sw_locationsupdates" />
 
@@ -134,6 +57,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Off"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#E8D10B"
         app:layout_constraintStart_toEndOf="@+id/tv_labelupdates"
         app:layout_constraintTop_toTopOf="@+id/tv_labelupdates" />
 
@@ -141,12 +66,17 @@
         android:id="@+id/sw_locationsupdates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:checked="true"
+        android:switchTextAppearance="@style/TextAppearance.AppCompat.Large"
         android:text="Location Updates"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#E8D10B"
+        android:thumbTint="#00BCD4"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.431"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider" />
+        tools:layout_editor_absoluteY="81dp"
+        tools:ignore="MissingConstraints" />
 
     <Switch
         android:id="@+id/sw_gps"
@@ -154,35 +84,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="GPS/SavePower"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#E8D10B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates" />
-
-    <TextView
-        android:id="@+id/tv_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/tv_lbladdress"
-        app:layout_constraintTop_toTopOf="@+id/tv_lbladdress" />
-
-    <TextView
-        android:id="@+id/tv_lbladdress"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Address:"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelspeed" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="409dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="32dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintTop_toBottomOf="@+id/tv_address"
-        tools:layout_editor_absoluteX="1dp"
-        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/tv_labelCrumbCounte"
@@ -190,6 +96,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="WayPoints"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#E8D10B"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_labelsensor" />
 
@@ -198,6 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/tv_labelCrumbCounte"
         app:layout_constraintTop_toTopOf="@+id/tv_labelCrumbCounte" />
 
@@ -205,9 +114,13 @@
         android:id="@+id/btn_newWayPoint"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#E8D10B"
         android:text="New WayPoint"
+        android:textColor="#000000"
+        android:textColorLink="#151313"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_labelCrumbCounte" />
 
@@ -215,9 +128,11 @@
         android:id="@+id/btn_showWayPointList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:backgroundTint="#E8D10B"
         android:text="Show waypoint List"
+        android:textColor="#000000"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_newWayPoint" />
 
@@ -227,13 +142,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="88dp"
+        android:backgroundTint="#E8D10B"
+
         android:onClick="save"
         android:text="save error"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.811"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text"
+        app:layout_constraintTop_toBottomOf="@+id/btn_showWayPointList"
         tools:ignore="MissingConstraints" />
 
     <Button
@@ -242,11 +158,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="52dp"
+
+        android:backgroundTint="#FF0202"
         android:onClick="save"
+
         android:text="Music"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_save" />
 
 

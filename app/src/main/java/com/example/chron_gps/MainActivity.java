@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private static String FILE_NAME ;
     private static String FILE_NAME2 ;
 
+
+
     int Update_pointer = 0;
     int Error_pointer = 0;
 
@@ -58,14 +60,13 @@ public class MainActivity extends AppCompatActivity {
     EditText mEditText;
 
     Calendar calendar = Calendar.getInstance();
-    String currentDate = DateFormat.getDateInstance().format(calendar.getTime());
-    String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+    String currentTime;
 
 
 
     // references to the UI elements
 
-    TextView tv_lat, tv_lon, tv_altitude, tv_accuracy, tv_speed, tv_sensor, tv_updates, tv_address, tv_wayPointsCounts;
+    TextView  tv_sensor, tv_updates,  tv_wayPointsCounts;
     Button btn_newWaypoint, btn_showWayPointList, btn_save, btn_music;
 
     Switch sw_locationupdates, sw_gps;
@@ -96,7 +97,8 @@ public class MainActivity extends AppCompatActivity {
         String text = mEditText.getText().toString();
         FileOutputStream fos = null;
         Error_pointer += 1;
-        Table_Errors.add("Error no:"+Error_pointer+" Error: "+ text+ " Date: "+ currentDate + " Time: "+ currentTime);
+        currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+        Table_Errors.add("Error no:"+Error_pointer+" Error: "+ text + " Time: "+ currentTime);
 
 
 
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             fos = openFileOutput(FILE_NAME, MODE_APPEND);
             for (int i=0; i< Table_Errors.size(); i++)
                 fos.write(((Table_Errors.get(i)+"\n").getBytes()));
-
+            //fos.write(((Table_Errors)+"\n").getBytes());
 
             //fos.write(text.getBytes());
 
@@ -152,14 +154,9 @@ public class MainActivity extends AppCompatActivity {
 
         // give each UI variable a value
 
-        tv_lat = findViewById(R.id.tv_lat);
-        tv_lon = findViewById(R.id.tv_lon);
-        tv_altitude = findViewById(R.id.tv_altitude);
-        tv_accuracy = findViewById(R.id.tv_accuracy);
-        tv_speed = findViewById(R.id.tv_speed);
+
         tv_sensor = findViewById(R.id.tv_sensor);
         tv_updates = findViewById(R.id.tv_updates);
-        tv_address = findViewById(R.id.tv_address);
         sw_gps = findViewById(R.id.sw_gps);
         sw_locationupdates = findViewById(R.id.sw_locationsupdates);
         btn_newWaypoint = findViewById(R.id.btn_newWayPoint);
@@ -244,12 +241,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void stopLocationUpdates() {
         tv_updates.setText("Location is NOT being tracked");
-        tv_lat.setText("Not tracking location");
-        tv_lon.setText("Not tracking location");
-        tv_speed.setText("Not tracking location");
-        tv_address.setText("Not tracking location");
-        tv_accuracy.setText("Not tracking location");
-        tv_altitude.setText("Not tracking location");
+
         tv_sensor.setText("Not tracking location");
 
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
@@ -328,9 +320,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateUIValues(Location location) {
         // update all of the text view objects with a ne Location.
 
-        tv_lat.setText(String.valueOf(location.getLatitude()));
-        tv_lon.setText(String.valueOf(location.getLongitude()));
-        tv_accuracy.setText(String.valueOf(location.getAccuracy()));
+
         String Latitude = String.valueOf(location.getLatitude());
         String Longtitude = String.valueOf(location.getLongitude());
         String Altitude = String.valueOf(location.getAltitude());
@@ -338,36 +328,12 @@ public class MainActivity extends AppCompatActivity {
         String Speed = String.valueOf(location.getSpeed());
         FileOutputStream foss = null;
         Update_pointer += 1;
-
-            Table.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+" Date: "+currentDate + " Time: "+ currentTime);
-
+        currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 
 
+        Table.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime);
 
-        if (location.hasAltitude()) {
-            tv_altitude.setText(String.valueOf(location.getAltitude()));
-        }
-        else {
-            tv_altitude.setText("Not available");
-        }
 
-        if (location.hasSpeed()) {
-            tv_speed.setText(String.valueOf(location.getSpeed()));
-        }
-        else {
-            tv_speed.setText("Not available");
-        }
-
-        Geocoder geocoder = new Geocoder(MainActivity.this);
-        try {
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            tv_address.setText(addresses.get(0).getAddressLine(0));
-
-        }
-        catch (Exception e){
-            tv_address.setText("Unable to get street address");
-
-        }
 
         MyApplication myApplication = (MyApplication)getApplicationContext();
         savedLocations = myApplication.getMyLocations();

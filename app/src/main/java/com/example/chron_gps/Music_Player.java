@@ -1,6 +1,7 @@
 package com.example.chron_gps;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.AnimatorSet;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
@@ -17,12 +19,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gauravk.audiovisualizer.visualizer.BarVisualizer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 public class Music_Player extends AppCompatActivity {
 
@@ -38,6 +48,69 @@ public class Music_Player extends AppCompatActivity {
     int position;
     ArrayList<File> mySongs;
     Thread updateseekbar;
+
+
+    // Gia thn prospatheia na anoigei ton fakelo
+
+    private static String FILE_NAME2;
+    String currentTime;
+    int Song_number =1;
+    ArrayList<String> Table_File = new ArrayList<String>();
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void save(View v) {
+
+        FileOutputStream fos = null;
+        Song_number += 1;
+        currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+        Table_File.add("Song no:"+Song_number+" -------------------------------------------------------" + " Time: "+ currentTime);
+
+
+
+
+        // plhrofories hmera
+        try {
+            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
+
+            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
+            fos = openFileOutput(FILE_NAME2, MODE_APPEND);
+            for (int i=0; i< Table_File.size(); i++)
+                fos.write(((Table_File.get(i)+"\n").getBytes()));
+
+
+            //fos.write(text.getBytes());
+
+
+
+
+
+            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (fos != null){
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
+
+
+
+
+
+    //
+
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -162,6 +235,7 @@ public class Music_Player extends AppCompatActivity {
 
 
         btnplay.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if (mediaPlayer.isPlaying())
@@ -173,6 +247,8 @@ public class Music_Player extends AppCompatActivity {
                 {
                     btnplay.setBackgroundResource(R.drawable.ic_pause);
                     mediaPlayer.start();
+                    save(v);
+                    //Edw na valw ton fakelo
                 }
             }
         });
@@ -192,6 +268,7 @@ public class Music_Player extends AppCompatActivity {
         }
 
         btnnext.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 mediaPlayer.stop();
@@ -209,6 +286,7 @@ public class Music_Player extends AppCompatActivity {
                 {
                     visualizer.setAudioSessionId(audiosessionId);
                 }
+                save(v);
 
 
             }
