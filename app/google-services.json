@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "577906143232",
+    "firebase_url": "https://hope-44da4-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "hope-44da4-default-rtdb",
+    "storage_bucket": "hope-44da4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:577906143232:android:96df2ec1c01b8f25bda8e5",
+        "android_client_info": {
+          "package_name": "com.example.chron_gps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "577906143232-754fcjt534mmvb5ueoe005b79itdru12.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl6099ROrgilbkaOBgubPHWsX4qpO1gog"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "577906143232-754fcjt534mmvb5ueoe005b79itdru12.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

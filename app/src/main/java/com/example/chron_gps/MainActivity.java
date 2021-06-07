@@ -25,7 +25,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -37,24 +44,28 @@ import java.time.*;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_UPDATE_INTERVAL = 30;
     public static final int FAST_UPDATE_INTERVAL = 5;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
-    private static String FILE_NAME ;
-    private static String FILE_NAME2 ;
+    private static String FILE_ERROR ;
+    private static String FILE_DATA ;
 
 
 
     int Update_pointer = 0;
     int Error_pointer = 0;
 
-    ArrayList<String> Table = new ArrayList<String>();
-    ArrayList<String> Table_Errors = new ArrayList<String>();
+    ArrayList<String> Table_Data_1 = new ArrayList<String>();
+    ArrayList<String> Table_Errors_1 = new ArrayList<String>();
 
 
     EditText mEditText;
@@ -62,7 +73,16 @@ public class MainActivity extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
     String currentTime;
 
+    //Gia to FireBase
+    FirebaseDatabase rootNode;
+    DatabaseReference reference;
 
+    List<String> myList;
+    List<String> TableList;
+
+
+
+    //
 
     // references to the UI elements
 
@@ -70,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     Button btn_newWaypoint, btn_showWayPointList, btn_save, btn_music;
 
     Switch sw_locationupdates, sw_gps;
+
 
     // variable to remember if we are tracking location or not.
     boolean updateOn = false;
@@ -91,25 +112,37 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void save(View v) {
         String text = mEditText.getText().toString();
         FileOutputStream fos = null;
         Error_pointer += 1;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Table_Errors.add("Error no:"+Error_pointer+" Error: "+ text + " Time: "+ currentTime);
+        Table_Errors_1.clear();
+        Table_Errors_1.add("Error no:"+Error_pointer+" Error: "+ text + " Time: "+ currentTime);
 
+
+        //Firebase
+        rootNode = FirebaseDatabase.getInstance();
+        reference = rootNode.getReference("do");
+        //reference.setValue("llll");
+
+        uploadList(v);
+
+
+
+        //
 
 
 
         // plhrofories hmera
         try {
-            FILE_NAME = LocalDate.now().toString()+"Errors.txt";
-            fos = openFileOutput(FILE_NAME, MODE_APPEND);
-            for (int i=0; i< Table_Errors.size(); i++)
-                fos.write(((Table_Errors.get(i)+"\n").getBytes()));
+            FILE_ERROR = LocalDate.now().toString()+"Errors.txt";
+            fos = openFileOutput(FILE_ERROR, MODE_APPEND);
+            for (int i=0; i< Table_Errors_1.size(); i++)
+                fos.write(((Table_Errors_1.get(i)+"\n").getBytes()));
             //fos.write(((Table_Errors)+"\n").getBytes());
+
 
             //fos.write(text.getBytes());
 
@@ -117,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             mEditText.getText().clear();
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -139,7 +172,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Gia to Firebase
+        myList = new ArrayList<>();
+        reference = FirebaseDatabase.getInstance().getReference().child("data-location");
+        TableList = new ArrayList<>();
+        //
+
+
         //gia thn mousikh
+
         btn_music = findViewById(R.id.btn_music);
         btn_music.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -330,8 +371,8 @@ public class MainActivity extends AppCompatActivity {
         Update_pointer += 1;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 
-
-        Table.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime);
+        Table_Data_1.clear();
+        Table_Data_1.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime);
 
 
 
@@ -341,22 +382,25 @@ public class MainActivity extends AppCompatActivity {
         //show the number of wayponits saved.
         tv_wayPointsCounts.setText(Integer.toString(savedLocations.size()));
 
+        
+       
         try {
 
-            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
-            foss = openFileOutput(FILE_NAME2, MODE_APPEND);
+            FILE_DATA = LocalDate.now().toString()+"Data.txt";
+            foss = openFileOutput(FILE_DATA, MODE_APPEND);
 
-                      for (int i=0; i< Table.size(); i++)
-                      foss.write(((Table.get(i)+"\n").getBytes()));
+                      for (int i=0; i< Table_Data_1.size(); i++)
+                      foss.write(((Table_Data_1.get(i)+"\n").getBytes()));
             //foss.write((Table.get(Update_pointer).getBytes()));
             //}
             //else {
                   //foss.write((Table.get(0).getBytes()));
 
+
             //}
 
 
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_DATA, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -379,6 +423,78 @@ public class MainActivity extends AppCompatActivity {
     public void openMusic_List(){
         Intent intent = new Intent(this, Music_List.class);
         startActivity(intent);
+
+    }
+
+
+    public void uploadList(View v){
+        myList.add("12 AA");
+        myList.add("13 AA");
+        myList.add("14 AA");
+        myList.add(Table_Data_1.toString());
+
+        //gia na steileis
+        //ArrayList<String> Recent = new ArrayList<>();
+        //DatabaseReference resent = FirebaseDatabase.getInstance().getReference().child("yo");
+        //resent.addValueEventListener(new ValueEventListener() {
+            //@Override
+            //public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //Recent.clear();
+                //for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                  //  Recent.add(snapshot.getValue().toString());
+                //}
+            //}
+
+            //@Override
+            //public void onCancelled(@NonNull DatabaseError dataseterror) {
+
+            //}
+        //});
+
+
+        reference.setValue(myList)
+            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        Toast.makeText(getApplicationContext(),"List is uploaded successfully", Toast.LENGTH_LONG).show();
+                    }
+                    
+                }
+            
+        });
+
+
+    }
+
+    public void TableUpload(View v)
+    {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+
+                if (datasnapshot.exists()){
+                    TableList.clear();
+                    for (DataSnapshot dss:datasnapshot.getChildren())
+                    {
+                      String timeName = dss.getValue(String.class);
+                      TableList.add(timeName);
+                    }
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int i=0;i<TableList.size(); i++)
+                    {
+                        stringBuilder.append(TableList.get(i) + ",");
+                    }
+                    Toast.makeText(getApplicationContext(), stringBuilder.toString(),Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError dataseterror) {
+
+            }
+        });
 
     }
 }

@@ -14,6 +14,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,6 +34,21 @@ public class Start_Activity extends AppCompatActivity {
     private static String FILE_NAME_INFOS ;
     String currentTime;
     ArrayList<String> Infos = new ArrayList<String>();
+
+
+
+
+    //Gia to FireBase
+    FirebaseDatabase rootNode;
+    DatabaseReference reference;
+
+    private Button button;
+
+
+
+    //
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -93,6 +112,7 @@ public class Start_Activity extends AppCompatActivity {
     }
 
 
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +122,24 @@ public class Start_Activity extends AppCompatActivity {
         remember = findViewById(R.id.rememberMe);
         login = findViewById(R.id.loginBtn);
 
+
+        //
+        button = findViewById(R.id.button);
+
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               rootNode = FirebaseDatabase.getInstance();
+               reference = rootNode.getReference("users");
+               reference.setValue("bbbbssss");
+               //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                //Intent intent = new Intent(Start_Activity.this, MainActivity.class);
+                //intent.put
+
+            }
+        });
+        //
 
 
 
@@ -119,9 +157,18 @@ public class Start_Activity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Start_Activity.this,MainActivity.class);
+                Intent intent = new Intent(Start_Activity.this,Game_Activity.class);
                 startActivity(intent);
                 save(v);
+
+                //Gia Firebase
+
+
+
+
+
+
+                //
             }
         });
 
