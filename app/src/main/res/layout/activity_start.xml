@@ -1,164 +1,264 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:outlineSpotShadowColor="@color/cardview_shadow_end_color"
-    tools:context=".Start_Activity">
+    android:background="#242424"
+    android:orientation="vertical"
+    android:weightSum="13"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="9dp"
+        android:layout_weight="3.3">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="237dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="232dp"
+                android:gravity="center_horizontal">
+
+                <ImageView
+                    android:layout_width="183dp"
+                    android:layout_height="109dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/ui_logo_start" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="179dp"
+                android:gravity="right|center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_ui_grad_start" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:weightSum="8"
+        android:orientation="vertical"
+        android:layout_weight="9.8">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="bottom"
+            android:layout_weight="1.5">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="37dp"
+                android:fontFamily="@font/roboto_black_start"
+                android:text="Login"
+                android:textColor="#ffffff"
+                android:textSize="30sp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="0.82">
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/edit_txt_1_start"
+                android:fontFamily="@font/roboto_light_start"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="20dp"
+                android:textColorHint="#DADADA" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="0.82">
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/edit_txt_1_start"
+                android:fontFamily="@font/roboto_light_start"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:paddingLeft="20dp"
+                android:textColorHint="#DADADA" />
 
 
-    <ImageView
-        android:id="@+id/imageview"
-        android:layout_width="500dp"
-        android:layout_height="400dp"
-        android:src="@drawable/fodo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        </LinearLayout>
 
-    </ImageView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="0.82">
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/edit_txt_1_start"
+                android:fontFamily="@font/roboto_light_start"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:paddingLeft="20dp"
+                android:textColorHint="#DADADA" />
 
-    <ImageView
-        android:id="@+id/imageview1"
-        android:layout_width="500dp"
-        android:layout_height="400dp"
-        android:src="@drawable/fodo"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
 
-    </ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="0.82">
+            <EditText
+                android:id="@+id/age"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/edit_txt_1_start"
+                android:fontFamily="@font/roboto_light_start"
+                android:hint="Age"
+                android:inputType="textShortMessage"
+                android:paddingLeft="20dp"
+                android:textColorHint="#DADADA" />
 
-    <Button
-        android:id="@+id/loginBtn"
-        android:layout_width="210dp"
-        android:layout_height="48dp"
 
-        android:layout_marginBottom="228dp"
-        android:text="LOGIN"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rememberMe"
-        app:layout_constraintVertical_bias="0.0"></Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="0.82">
+            <EditText
+                android:id="@+id/weigh"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/edit_txt_1_start"
+                android:fontFamily="@font/roboto_light_start"
+                android:hint="Weigh"
+                android:inputType="textShortMessage"
+                android:paddingLeft="20dp"
+                android:textColorHint="#DADADA" />
 
-    <CheckBox
-        android:id="@+id/rememberMe"
-        android:layout_width="212dp"
-        android:layout_height="33dp"
-        android:text="Remember me"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:text="Email"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tests"
-        tools:ignore="MissingConstraints"
-        tools:text="Email" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="0.82">
+            <EditText
+                android:id="@+id/w_runs"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/edit_txt_1_start"
+                android:fontFamily="@font/roboto_light_start"
+                android:hint="Usual week runs"
+                android:inputType="textShortMessage"
+                android:paddingLeft="20dp"
+                android:textColorHint="#DADADA" />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:text="Password"
-        android:textColor="#040404"
-        android:textColorHint="#9C27B0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email"
-        tools:text="Password" />
 
-    <EditText
-        android:id="@+id/age"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Age"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:layout_weight="0.82">
+            <EditText
+                android:id="@+id/tests"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/edit_txt_1_start"
+                android:fontFamily="@font/roboto_light_start"
+                android:hint="Test1/Test_2/..."
+                android:inputType="textShortMessage"
+                android:paddingLeft="20dp"
+                android:textColorHint="#DADADA" />
 
-    <EditText
-        android:id="@+id/weigh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Weigh"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/age" />
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="54dp" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_weight="0.4">
+            <Button
+                android:id="@+id/loginBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:background="@drawable/ic_rectangle_grad_start"
+                android:fontFamily="@font/roboto_medium_start"
+                android:text="Log in"
+                android:layout_gravity="center"
+                android:textAllCaps="false"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
 
-    <EditText
-        android:id="@+id/w_runs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Usual week runs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/weigh" />
 
-    <EditText
-        android:id="@+id/tests"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Test_1/Test_2/..."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/w_runs" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintTop_toBottomOf="@+id/loginBtn"
-        tools:layout_editor_absoluteX="161dp"
-        tools:ignore="MissingConstraints" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="115dp"
+            android:layout_weight="0">
+
+
+            <CheckBox
+                android:id="@+id/rememberMe"
+                android:layout_width="160dp"
+                android:layout_height="20dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginRight="0dp"
+                android:text="Remember me"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_gravity="center"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loginBtn" />
+
+
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

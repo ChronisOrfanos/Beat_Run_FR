@@ -35,7 +35,14 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -65,6 +72,18 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     int stepDetect = 0;
     // Telos StepCounter
 
+    //Gia INTENT---------------------------------------------
+    String User_Name;
+    public static final String Share_User_3 = "name";
+
+    //Telos INTENT-------------------------------------------
+
+    //Gia to FireBase-----------------------------------------
+    FirebaseDatabase rootNode;
+    DatabaseReference reference;
+    List<String> myList;
+    List<String> TableList;
+    // Telos FireBase-----------------------------------------
 
 
     //Gia location
@@ -112,7 +131,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         setContentView(R.layout.activity_game);
 
 
-        //Gia to StepCounter
+        //Gia to StepCounter--------------------------------------------------------------------------------------------------------------------------------------
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
@@ -120,9 +139,19 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null) {
             mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         }
-    // Telos tou StepCounter
+        // Telos tou StepCounter----------------------------------------------------------------------------------------------------------------------------------
 
+        //Gia to INTENT-----------------------------------------------------------------------------
+        Intent intent = getIntent();
+        String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
+        User_Name = Name_Activity_1;
+        //Telos INTENT------------------------------------------------------------------------------
 
+        //Gia to Firebase---------------------------------------------------------------------------
+        myList = new ArrayList<>();
+        reference = FirebaseDatabase.getInstance().getReference().child("data-location");
+        TableList = new ArrayList<>();
+        //Telos FireBase----------------------------------------------------------------------------
 
         //gps???
         tv_sensor = findViewById(R.id.tv_sensor);
@@ -196,8 +225,13 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         btn_ready.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String User_Name = Name_Activity_1;
+
                 Intent intent = new Intent(Game_Activity.this, MainActivity.class );
+                intent.putExtra(Share_User_3, User_Name);
+
                 mediaPlayer.stop();
+                uploadList(v);
                 stopLocationUpdates();
                 startActivity(intent);
             }
@@ -430,7 +464,19 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         Table_Game.add("Song no:"+game_count+" -------------------------------------------------------" + " Time: "+ currentTime);
 
+        //Firebase---------------------------------------------------
+        rootNode = FirebaseDatabase.getInstance();
+        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Game");
+        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Game");
+        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Game");
+        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
+        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
+        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Game");
+        } else {reference = rootNode.getReference("New_User_Game");}
+        //reference = rootNode.getReference("Game");
+        //reference.setValue("llll");
 
+        //Telos FireBase----------------------------------------------
 
 
         // plhrofories hmera
@@ -503,7 +549,81 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
             sensorManager.unregisterListener(this, mStepDetector);
     }
 
-    // Telos Sinartisewn tou StepCounter -------------------------------------------------------------
+    // Telos Sinartisewn tou StepCounter -----------------------------------------------------------------------------------
+
+
+    //Synartiseis gia FireBase---------------------------------------------------------------------------------------------
+    public void uploadList(View v){
+        myList.add("12 AA");
+        myList.add("13 AA");
+        myList.add("14 AA");
+        myList.add(Table_Game.toString());
+
+        //gia na steileis
+        //ArrayList<String> Recent = new ArrayList<>();
+        //DatabaseReference resent = FirebaseDatabase.getInstance().getReference().child("yo");
+        //resent.addValueEventListener(new ValueEventListener() {
+        //@Override
+        //public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        //Recent.clear();
+        //for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+        //  Recent.add(snapshot.getValue().toString());
+        //}
+        //}
+
+        //@Override
+        //public void onCancelled(@NonNull DatabaseError dataseterror) {
+
+        //}
+        //});
+
+
+        reference.setValue(myList)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getApplicationContext(),"List is uploaded successfully", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+
+                });
+
+
+    }
+
+    public void TableUpload(View v)
+    {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+
+                if (datasnapshot.exists()){
+                    TableList.clear();
+                    for (DataSnapshot dss:datasnapshot.getChildren())
+                    {
+                        String timeName = dss.getValue(String.class);
+                        TableList.add(timeName);
+                    }
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int i=0;i<TableList.size(); i++)
+                    {
+                        stringBuilder.append(TableList.get(i) + ",");
+                    }
+                    Toast.makeText(getApplicationContext(), stringBuilder.toString(),Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError dataseterror) {
+
+            }
+        });
+
+    }
+    //Telos Synartisewn tou FireBase---------------------------------------------------------------------------------------
 
 
 }

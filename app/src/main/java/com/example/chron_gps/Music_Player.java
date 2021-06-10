@@ -217,8 +217,8 @@ public class Music_Player extends AppCompatActivity {
             }
         });
 
-        String endTime = createTime(mediaPlayer.getDuration());
-        txtsstop.setText(endTime);
+        //String endTime = createTime(mediaPlayer.getDuration());
+        //txtsstop.setText(endTime);
 
         final Handler handler = new Handler();
         final  int delay = 1000;
@@ -228,9 +228,12 @@ public class Music_Player extends AppCompatActivity {
             public void run() {
                 String currentTime = createTime(mediaPlayer.getCurrentPosition());
                 txtsstart.setText(currentTime);
+                String endTime = createTime(mediaPlayer.getDuration());
+                txtsstop.setText(endTime);
                 handler.postDelayed(this, delay);
 
             }
+
         }, delay);
 
 

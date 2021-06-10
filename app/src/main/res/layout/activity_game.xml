@@ -4,53 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/move_skill"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".Game_Activity">
 
 
-  <ImageView
-      android:id="@+id/imagePlayPause"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      android:layout_marginTop="50dp"
-      android:contentDescription="@string/app_name"
-      android:src="@drawable/ic_play_game" />
 
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="20dp"
-      android:gravity="center_vertical"
-      android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/textCurrentTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0:00"
-        android:textColor="#212121"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-    <SeekBar
-        android:id="@+id/playerSeekBar"
-        android:layout_width="286dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_weight="1" />
-
-    <TextView
-        android:id="@+id/textTotalDuration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0:00"
-        android:textColor="#212121"
-        android:textSize="18sp"
-        android:textStyle="bold" />
-
-  </LinearLayout>
 
   <Button
       android:id="@+id/btn_ready"
@@ -137,6 +97,49 @@
       app:layout_constraintStart_toStartOf="parent"
       tools:ignore="MissingConstraints"
       tools:layout_editor_absoluteY="247dp" />
+
+  <ImageView
+      android:id="@+id/imagePlayPause"
+      android:layout_width="50dp"
+      android:layout_height="50dp"
+      android:layout_marginTop="50dp"
+      android:contentDescription="@string/app_name"
+      android:src="@drawable/ic_play_game" />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="20dp"
+      android:gravity="center_vertical"
+      android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/textCurrentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        android:textColor="#212121"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <SeekBar
+        android:id="@+id/playerSeekBar"
+        android:layout_width="286dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/textTotalDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        android:textColor="#212121"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+  </LinearLayout>
 
 
 </LinearLayout>

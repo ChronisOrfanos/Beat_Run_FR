@@ -1,16 +1,12 @@
 package com.example.chron_gps;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.Manifest;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -20,12 +16,18 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -33,24 +35,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.sql.Time;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class MainActivity extends AppCompatActivity {
     public static final int DEFAULT_UPDATE_INTERVAL = 30;
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     private static String FILE_ERROR ;
     private static String FILE_DATA ;
+
 
 
 
@@ -73,13 +73,28 @@ public class MainActivity extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
     String currentTime;
 
-    //Gia to FireBase
+    //Gia INTENT---------------------------------------------
+    String User_Name;
+    String userName;
+    //String User_Name_tel;
+
+    //Telos INTENT-------------------------------------------
+
+    //Gia to FireBase-----------------------------
     FirebaseDatabase rootNode;
     DatabaseReference reference;
-
     List<String> myList;
     List<String> TableList;
+    //Telos FireBase------------------------------
 
+    //FireBase Download-----------------------------------------------------------------------------
+    FirebaseStorage firebaseStorage;
+    StorageReference storageReference;
+
+
+    ArrayList <StorageReference> reflist = new ArrayList<>();
+    StorageReference ref1,ref2,ref3,ref4,ref5,ref6,ref7,ref8,ref9,ref10;
+    //Telos FireBase Download-----------------------------------------------------------------------
 
 
     //
@@ -87,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     // references to the UI elements
 
     TextView  tv_sensor, tv_updates,  tv_wayPointsCounts;
-    Button btn_newWaypoint, btn_showWayPointList, btn_save, btn_music;
+    Button btn_newWaypoint, btn_showWayPointList, btn_save, btn_music, down;
 
     Switch sw_locationupdates, sw_gps;
 
@@ -122,9 +137,17 @@ public class MainActivity extends AppCompatActivity {
         Table_Errors_1.add("Error no:"+Error_pointer+" Error: "+ text + " Time: "+ currentTime);
 
 
+
         //Firebase
         rootNode = FirebaseDatabase.getInstance();
-        reference = rootNode.getReference("do");
+        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Runs");
+        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Runs");
+        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Runs");
+        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Runs");
+        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Runs");
+        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Levis_Runs");
+        } else {reference = rootNode.getReference("New_User_Runs");}
+        //reference = rootNode.getReference("sooo");
         //reference.setValue("llll");
 
         uploadList(v);
@@ -171,6 +194,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //Gia FireBase Download---------------------------------------------------------------------
+        down = findViewById(R.id.down);
+
+        down.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                download(userName);
+            }
+        });
+        //Telos FireBase Download-------------------------------------------------------------------
+
+
+        //Gia to INTENT-----------------------------------------------------------------------------
+        Intent intent = getIntent();
+        String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
+        User_Name = Name_Activity_1;
+
+        userName = Name_Activity_1;
+
+        //Intent intent1 = getIntent();
+        //String Name_Activity_2 =intent1.getStringExtra(Start_Activity.Share_User_2);
+        //User_Name_tel = Name_Activity_2;
+        //Telos INTENT------------------------------------------------------------------------------
 
         //Gia to Firebase
         myList = new ArrayList<>();
@@ -279,6 +327,250 @@ public class MainActivity extends AppCompatActivity {
     }// end onCreate method
 
 
+    //Gia to FireBase Download----------------------------------------------------------------------
+    public void download(String userName)
+    {
+
+        //if(userName == "Chronis"){}
+
+        storageReference = firebaseStorage.getInstance().getReference();
+
+        if (userName.equals("Chronis")||userName.equals("Chronis "))
+        {ref1 = storageReference.child("John").child("1.mp3");
+            ref2 = storageReference.child("").child("2.mp3");
+            ref3 = storageReference.child("Chronis").child("3.mp3");
+            ref4 = storageReference.child("Chronis").child("4.mp3");
+            ref5 = storageReference.child("Chronis").child("5.mp3");
+            ref6 = storageReference.child("Chronis").child("6.mp3");
+            ref7 = storageReference.child("Chronis").child("7.mp3");
+            ref8 = storageReference.child("Chronis").child("8.mp3");
+            ref9 = storageReference.child("Chronis").child("9.mp3");
+            ref10 = storageReference.child("Chronis").child("10.mp3");
+        }else if(userName.equals("Xirorafas")||userName.equals("Xirorafas ")){
+            ref1 = storageReference.child("Xirorafas").child("1.mp3");
+            ref2 = storageReference.child("Xirorafas").child("2.mp3");
+            ref3 = storageReference.child("Xirorafas").child("3.mp3");
+            ref4 = storageReference.child("Xirorafas").child("4.mp3");
+            ref5 = storageReference.child("Xirorafas").child("5.mp3");
+            ref6 = storageReference.child("Xirorafas").child("6.mp3");
+            ref7 = storageReference.child("Xirorafas").child("7.mp3");
+            ref8 = storageReference.child("Xirorafas").child("8.mp3");
+            ref9 = storageReference.child("Xirorafas").child("9.mp3");
+            ref10 = storageReference.child("Xirorafas").child("10.mp3");
+        }else if(userName.equals("Sousanis")||userName.equals("Sousanis ")){
+            ref1 = storageReference.child("Sousanis").child("1.mp3");
+            ref2 = storageReference.child("Sousanis").child("2.mp3");
+            ref3 = storageReference.child("Sousanis").child("3.mp3");
+            ref4 = storageReference.child("Sousanis").child("4.mp3");
+            ref5 = storageReference.child("Sousanis").child("5.mp3");
+            ref6 = storageReference.child("Sousanis").child("6.mp3");
+            ref7 = storageReference.child("Sousanis").child("7.mp3");
+            ref8 = storageReference.child("Sousanis").child("8.mp3");
+            ref9 = storageReference.child("Sousanis").child("9.mp3");
+            ref10 = storageReference.child("Sousanis").child("10.mp3");
+        }else if(userName.equals("Guru")||userName.equals("Guru ")){
+            ref1 = storageReference.child("Guru").child("1.mp3");
+            ref2 = storageReference.child("Guru").child("2.mp3");
+            ref3 = storageReference.child("Guru").child("3.mp3");
+            ref4 = storageReference.child("Guru").child("4.mp3");
+            ref5 = storageReference.child("Guru").child("5.mp3");
+            ref6 = storageReference.child("Guru").child("6.mp3");
+            ref7 = storageReference.child("Guru").child("7.mp3");
+            ref8 = storageReference.child("Guru").child("8.mp3");
+            ref9 = storageReference.child("Guru").child("9.mp3");
+            ref10 = storageReference.child("Guru").child("10.mp3");
+        }else if(userName.equals("Moustakas")||userName.equals("Moustakas ")){
+            ref1 = storageReference.child("Moustakas").child("1.mp3");
+            ref2 = storageReference.child("Moustakas").child("2.mp3");
+            ref3 = storageReference.child("Moustakas").child("3.mp3");
+            ref4 = storageReference.child("Moustakas").child("4.mp3");
+            ref5 = storageReference.child("Moustakas").child("5.mp3");
+            ref6 = storageReference.child("Moustakas").child("6.mp3");
+            ref7 = storageReference.child("Moustakas").child("7.mp3");
+            ref8 = storageReference.child("Moustakas").child("8.mp3");
+            ref9 = storageReference.child("Moustakas").child("9.mp3");
+            ref10 = storageReference.child("Moustakas").child("10.mp3");
+        }else if(userName.equals("Levis")||userName.equals("Levis ")){
+            ref1 = storageReference.child("Levis").child("1.mp3");
+            ref2 = storageReference.child("Levis").child("2.mp3");
+            ref3 = storageReference.child("Levis").child("3.mp3");
+            ref4 = storageReference.child("Levis").child("4.mp3");
+            ref5 = storageReference.child("Levis").child("5.mp3");
+            ref6 = storageReference.child("Levis").child("6.mp3");
+            ref7 = storageReference.child("Levis").child("7.mp3");
+            ref8 = storageReference.child("Levis").child("8.mp3");
+            ref9 = storageReference.child("Levis").child("9.mp3");
+            ref10 = storageReference.child("Levis").child("10.mp3");
+        }else{ref1 = storageReference.child("New_User").child("1.mp3");
+            ref2 = storageReference.child("New_User").child("2.mp3");
+            ref3 = storageReference.child("New_User").child("3.mp3");
+            ref4 = storageReference.child("New_User").child("4.mp3");
+            ref5 = storageReference.child("New_User").child("5.mp3");
+            ref6 = storageReference.child("New_User").child("6.mp3");
+            ref7 = storageReference.child("New_User").child("7.mp3");
+            ref8 = storageReference.child("New_User").child("8.mp3");
+            ref9 = storageReference.child("New_User").child("9.mp3");
+            ref10 = storageReference.child("New_User").child("10.mp3");}
+
+
+        //logika ama thelw ola ta tragoudia tote xwris child
+//        ref1 = storageReference.child("John").child("1.mp3");
+//        ref2 = storageReference.child("John").child("2.mp3");
+//        ref3 = storageReference.child("John").child("3.mp3");
+//        ref4 = storageReference.child("John").child("4.mp3");
+//        ref5 = storageReference.child("John").child("5.mp3");
+//        ref6 = storageReference.child("John").child("6.mp3");
+//        ref7 = storageReference.child("John").child("7.mp3");
+//        ref8 = storageReference.child("John").child("8.mp3");
+//        ref9 = storageReference.child("John").child("9.mp3");
+//        ref10 = storageReference.child("John").child("10.mp3");
+
+
+        //ref= storageReference
+                //.child("Chron")
+                //.child("08 - Big Bottles feat. Jelly Roll.mp3");
+
+        ref1.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "1", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "2", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+        ref3.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "3", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref4.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "4", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref5.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "5", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref6.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "6", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref7.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "7", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref8.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "8", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref9.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "9", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+        ref10.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String url=uri.toString();
+                downloadFile(MainActivity.this, "10", ".mp3",DIRECTORY_DOWNLOADS,url);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        });
+
+
+    }
+
+    public void downloadFile(Context context, String fileName, String fileExtension, String destinationDirectory, String url){
+
+        DownloadManager downloadManager = (DownloadManager) context.
+                getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
+
+        downloadManager.enqueue(request);
+
+    }
+
+
+
+    //Telos FireBase Download-----------------------------------------------------------------------
+
+
 
     private void stopLocationUpdates() {
         tv_updates.setText("Location is NOT being tracked");
@@ -382,8 +674,8 @@ public class MainActivity extends AppCompatActivity {
         //show the number of wayponits saved.
         tv_wayPointsCounts.setText(Integer.toString(savedLocations.size()));
 
-        
-       
+
+
         try {
 
             FILE_DATA = LocalDate.now().toString()+"Data.txt";
@@ -459,9 +751,9 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Toast.makeText(getApplicationContext(),"List is uploaded successfully", Toast.LENGTH_LONG).show();
                     }
-                    
+
                 }
-            
+
         });
 
 

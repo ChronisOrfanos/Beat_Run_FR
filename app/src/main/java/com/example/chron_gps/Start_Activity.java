@@ -1,5 +1,6 @@
 package com.example.chron_gps;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,9 +15,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -25,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class Start_Activity extends AppCompatActivity {
@@ -35,13 +42,18 @@ public class Start_Activity extends AppCompatActivity {
     String currentTime;
     ArrayList<String> Infos = new ArrayList<String>();
 
+    //Gia INTENT
+    public static final String Share_User = "name";
+    //public static final String Share_User_2 = "name";
+    //
 
 
-
-    //Gia to FireBase
+    //Gia to FireBase-----------------------------------------
     FirebaseDatabase rootNode;
     DatabaseReference reference;
-
+    List<String> myList;
+    List<String> TableList;
+    // Telos FireBase-----------------------------------------
     private Button button;
 
 
@@ -69,6 +81,29 @@ public class Start_Activity extends AppCompatActivity {
         String Weigh = weigh.getText().toString();
         String U_w_runs = usual_week_runs.getText().toString();
         String Tests = tests.getText().toString();
+
+        //Firebase---------------------------------------------------
+        rootNode = FirebaseDatabase.getInstance();
+        if (Name.equals("Chronis")||Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Infos");
+        } else if (Name.equals("Xirorafas")||Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Infos");
+        } else if (Name.equals("Sousanis")||Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Infos");
+        } else if (Name.equals("Guru")||Name.equals("Guru ")){reference = rootNode.getReference("Guru_Infos");
+        } else if (Name.equals("Moustakas")||Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Infos");
+        } else if (Name.equals("Levis")||Name.equals("Levis ")){reference = rootNode.getReference("Levis_Infos");
+        } else {reference = rootNode.getReference("New_User_Infos");}
+
+
+
+
+            //else {
+            //reference = rootNode.getReference("Infos");
+        //} else if(Name.equals("Xirorafas")){
+          //  reference = rootNode.getReference("Xiro_Infos");
+        //}
+        //reference = rootNode.getReference("Infos");
+        //reference.setValue("llll");
+        //Telos FireBase----------------------------------------------
+
 
         FileOutputStream fos = null;
 
@@ -123,22 +158,32 @@ public class Start_Activity extends AppCompatActivity {
         login = findViewById(R.id.loginBtn);
 
 
+        //Gia to Firebase---------------------------------------------------------------------------
+        myList = new ArrayList<>();
+        reference = FirebaseDatabase.getInstance().getReference().child("data-location");
+        TableList = new ArrayList<>();
+
+        name = (EditText) findViewById(R.id.name);
+        String Name = name.getText().toString();
+
+        //Telos FireBase----------------------------------------------------------------------------
+
         //
-        button = findViewById(R.id.button);
+        //button = findViewById(R.id.button);
 
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               rootNode = FirebaseDatabase.getInstance();
-               reference = rootNode.getReference("users");
-               reference.setValue("bbbbssss");
-               //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                //Intent intent = new Intent(Start_Activity.this, MainActivity.class);
-                //intent.put
+        //button.setOnClickListener(new View.OnClickListener() {
+            //@Override
+            //public void onClick(View v) {
+               //rootNode = FirebaseDatabase.getInstance();
+               //reference = rootNode.getReference("users");
+               //reference.setValue("bbbbssss");
+               ////FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+                ////Intent intent = new Intent(Start_Activity.this, MainActivity.class);
+                ////intent.put
 
-            }
-        });
+           //}
+        //;
         //
 
 
@@ -157,9 +202,21 @@ public class Start_Activity extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Start_Activity.this,Game_Activity.class);
+
+
+                //name = (EditText) findViewById(R.id.name);
+                String User_Name = name.getText().toString();
+
+                Intent intent = new Intent(Start_Activity.this,Move_Skill.class);
+                intent.putExtra(Share_User, User_Name);
+
                 startActivity(intent);
                 save(v);
+                uploadList(v);
+
+                //String username = name.getText().toString();
+                //intent.putExtra("keyname", Name);
+
 
                 //Gia Firebase
 
@@ -178,6 +235,11 @@ public class Start_Activity extends AppCompatActivity {
                 SharedPreferences preferences1 = getSharedPreferences("checkbox", MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences1.edit();
                 editor.putString("remember","true");
+
+                //String User_Name_Tel = name.getText().toString();
+                //Intent intent_2 = new Intent(Start_Activity.this,MainActivity.class);
+                //intent_2.putExtra(Share_User_2, User_Name_Tel);
+
                 editor.apply();
                 Toast.makeText(Start_Activity.this, "checked", Toast.LENGTH_SHORT).show();
 
@@ -196,6 +258,80 @@ public class Start_Activity extends AppCompatActivity {
 
 
     }
+
+
+    //Synartiseis gia FireBase---------------------------------------------------------------------------------------------
+    public void uploadList(View v){
+        myList.add("12 AA");
+        myList.add("13 AA");
+        myList.add("14 AA");
+        myList.add(Infos.toString());
+
+        //gia na steileis
+        //ArrayList<String> Recent = new ArrayList<>();
+        //DatabaseReference resent = FirebaseDatabase.getInstance().getReference().child("yo");
+        //resent.addValueEventListener(new ValueEventListener() {
+        //@Override
+        //public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        //Recent.clear();
+        //for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+        //  Recent.add(snapshot.getValue().toString());
+        //}
+        //}
+
+        //@Override
+        //public void onCancelled(@NonNull DatabaseError dataseterror) {
+
+        //}
+        //});
+
+
+        reference.setValue(myList)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getApplicationContext(),"List is uploaded successfully", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+
+                });
+
+
+    }
+
+    public void TableUpload(View v)
+    {
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot datasnapshot) {
+
+                if (datasnapshot.exists()){
+                    TableList.clear();
+                    for (DataSnapshot dss:datasnapshot.getChildren())
+                    {
+                        String timeName = dss.getValue(String.class);
+                        TableList.add(timeName);
+                    }
+
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int i=0;i<TableList.size(); i++)
+                    {
+                        stringBuilder.append(TableList.get(i) + ",");
+                    }
+                    Toast.makeText(getApplicationContext(), stringBuilder.toString(),Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError dataseterror) {
+
+            }
+        });
+
+    }
+    //Telos Synartisewn tou FireBase---------------------------------------------------------------------------------------
 
 
 
