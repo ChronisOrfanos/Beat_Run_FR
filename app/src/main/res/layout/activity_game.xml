@@ -1,145 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/move_skill"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    tools:context=".Game_Activity">
+    tools:context=".Move_Skill">
 
-
-
-
-  <Button
-      android:id="@+id/btn_ready"
+  <androidx.appcompat.widget.AppCompatImageView
+      android:id="@+id/appCompatImageView"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-
-      android:gravity="center|bottom"
-      android:text="Ready to Start" />
-
+      android:layout_height="match_parent"
+      android:scaleType="centerCrop"
+      android:src="@drawable/move_skill" />
 
   <TextView
-      android:id="@+id/tv_labelsensor"
-      android:layout_width="100dp"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:text="Sensor:"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/sw_gps_game" />
-
-  <TextView
-      android:id="@+id/tv_sensor"
+      android:id="@+id/textView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Cell Tower + Wifi"
-      app:layout_constraintStart_toEndOf="@+id/tv_labelsensor"
-      app:layout_constraintTop_toTopOf="@+id/tv_labelsensor" />
-
-  <TextView
-      android:id="@+id/tv_labelupdates"
-      android:layout_width="100dp"
-      android:layout_height="wrap_content"
-      android:text="Updates:"
+      android:layout_marginStart="8dp"
+      android:layout_marginTop="50dp"
+      android:layout_marginEnd="8dp"
+      android:text="Lets find your\n     Speed!"
+      android:textColor="@android:color/white"
+      android:textSize="30sp"
+      android:textStyle="bold"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintHorizontal_bias="0.151"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/sw_locationsupdates_game" />
-
-  <TextView
-      android:id="@+id/tv_updates"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="Off"
-      app:layout_constraintStart_toEndOf="@+id/tv_labelupdates"
-      app:layout_constraintTop_toTopOf="@+id/tv_labelupdates" />
+      app:layout_constraintTop_toTopOf="parent" />
 
   <Switch
       android:id="@+id/sw_locationsupdates_game"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:checked="true"
+      android:checked="false"
       android:text="Location Updates"
+      android:layout_marginEnd="150dp"
+      android:textColor="@color/white"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/divider" />
+      app:layout_constraintTop_toBottomOf="@+id/textView"
+      tools:ignore="MissingConstraints" />
 
 
-  <Switch
-      android:id="@+id/sw_gps_game"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:text="GPS/SavePower"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates" />
 
-  <View
-      android:id="@+id/divider"
-      android:layout_width="409dp"
-      android:layout_height="1dp"
-      android:layout_marginTop="32dp"
-      android:background="?android:attr/listDivider"
-      app:layout_constraintTop_toBottomOf="@+id/tv_address"
-      tools:ignore="MissingConstraints"
-      tools:layout_editor_absoluteX="1dp" />
+
+
 
   <TextView
-      android:id="@+id/textViewStepDetector"
+      android:id="@+id/explenation"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="Step Detector"
+      android:layout_marginTop="110dp"
+      android:text="Run with the beat\n it changes every 30s' "
+      android:textColor="@color/white_pressed"
+      android:textSize="30sp"
+      android:textStyle="italic"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.507"
       app:layout_constraintStart_toStartOf="parent"
-      tools:ignore="MissingConstraints"
-      tools:layout_editor_absoluteY="247dp" />
+      app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-  <ImageView
-      android:id="@+id/imagePlayPause"
-      android:layout_width="50dp"
-      android:layout_height="50dp"
-      android:layout_marginTop="50dp"
-      android:contentDescription="@string/app_name"
-      android:src="@drawable/ic_play_game" />
+
+
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_margin="20dp"
-      android:gravity="center_vertical"
-      android:orientation="horizontal">
+      android:layout_height="match_parent"
+      android:gravity="bottom"
+      android:orientation="vertical"
+      tools:ignore="MissingConstraints"
+      tools:layout_editor_absoluteX="0dp"
+      tools:layout_editor_absoluteY="0dp">
 
-    <TextView
-        android:id="@+id/textCurrentTime"
-        android:layout_width="wrap_content"
+
+    <ImageView
+        android:id="@+id/imagePlayPause"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_play_game" />
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="0:00"
-        android:textColor="#212121"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_margin="40dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="0dp"
+        android:orientation="horizontal">
 
-    <SeekBar
-        android:id="@+id/playerSeekBar"
-        android:layout_width="286dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/textTotalDuration"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0:00"
-        android:textColor="#212121"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+
+      <TextView
+          android:id="@+id/textCurrentTime"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="0:00"
+          android:textColor="#212121"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+      <SeekBar
+          android:id="@+id/playerSeekBar"
+          android:layout_width="200dp"
+          android:layout_height="20dp"
+          android:layout_marginBottom="0dp"
+          />
+
+      <TextView
+          android:id="@+id/textTotalDuration"
+          android:layout_width="120dp"
+          android:layout_height="wrap_content"
+          android:text="0:00"
+          android:textColor="#212121"
+          android:textSize="18sp"
+          android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+          android:id="@+id/bnt_nextt"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_centerInParent="true"
+          android:layout_marginEnd="10dp"
+          android:layout_marginBottom="5dp"
+          android:backgroundTint="#4E525B"
+          android:elevation="0dp"
+          android:src="@drawable/round_arrow_forward_24"
+          android:tint="@android:color/white"
+          app:elevation="0dp"
+          app:fabCustomSize="80dp"
+          tools:ignore="RelativeOverlap" />
+
+      <Button
+          android:id="@+id/bnt_ready"
+          android:layout_width="55dp"
+          android:layout_height="47dp"
+          android:background="?android:attr/selectableItemBackground"
+          android:layout_alignTop="@+id/bnt_nextt"
+          android:layout_alignParentEnd="true"
+          android:layout_centerInParent="true"
+          android:layout_marginEnd="24dp"
+          android:layout_marginBottom="5dp"
+          tools:ignore="NotSibling"></Button>
+
+
+
+
+    </RelativeLayout>
 
   </LinearLayout>
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

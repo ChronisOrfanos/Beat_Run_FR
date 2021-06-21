@@ -44,6 +44,9 @@ import java.util.Locale;
 
 public class Move_Skill extends AppCompatActivity implements SensorEventListener {
 
+       //---------------------------- Gia na doume thn anapiria tou. Kathe fora pou pataei to play midenizei to Step Counter ---------------------------------\\
+
+
 
     Button btn_next;
     private ImageView imagePlayPause, Done_Check;
@@ -91,7 +94,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         playerSeekBar = findViewById(R.id.playerSeekBar);
         mediaPlayer = new MediaPlayer();
         playerSeekBar.setMax(100);
-        Done_Check = findViewById(R.id.Done_check);
 
         //Gia to INTENT-----------------------------------------------------------------------------
         Intent intent = getIntent();
@@ -106,9 +108,9 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
         //Telos FireBase----------------------------------------------------------------------------
 
-        //Gia to StepCounter
+        //Gia to StepCounter------------------------------------------------------------------------
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        textViewStepDetector = findViewById(R.id.textViewStepDetector);
+        //textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null) {
@@ -120,7 +122,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
             textViewStepDetector.setText("Detector Sensor is not Present");
             isDetectorSensorPresent = false;
         }
-        // Telos tou StepCounter
+        // Telos tou StepCounter--------------------------------------------------------------------
 
 
 
@@ -130,9 +132,11 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
 
         btn_next.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String User_Name = Name_Activity_1;
+                save();
 
 
                 Intent intent = new Intent(Move_Skill.this, Game_Activity.class );
@@ -158,7 +162,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
                     imagePlayPause.setImageResource(R.drawable.ic_pause_game);
                     updateSeekBar();
                 }
-                //save(v);
             }
 
 
@@ -179,17 +182,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
             }
         });
 
-        //Gia thn apothikeush twn Steps---------------------------------------------------------------------------------------------------------
-        Done_Check.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
-            @Override
-            public void onClick(View w) {
-               save();
-            }
-
-
-        });
-        //Telos apothikeushs twn Steps----------------------------------------------------------------------------------------------------------
 
 
 
@@ -260,7 +252,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         //else
         if (event.sensor == mStepDetector){
             stepDetect = (int) (stepDetect + event.values[0]);
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+            //textViewStepDetector.setText(String.valueOf(stepDetect));
         }
 
     }
@@ -297,7 +289,8 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
         FileOutputStream fos = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Table_Skill.add("Number of Steps:"+ stepDetect + " Time: "+ currentTime +"Date: "+ LocalDate.now());
+        Table_Skill.clear();
+        Table_Skill.add(" Number of Steps: "+ stepDetect +" Entrie Date "+ LocalDate.now() +" Time "+currentTime);
 
         //Firebase---------------------------------------------------
         rootNode = FirebaseDatabase.getInstance();
@@ -307,6 +300,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Skills");
         } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Skills");
         } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Infos");
+        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
         } else {reference = rootNode.getReference("New_User_Skills");}
         //reference = rootNode.getReference("Skills");
         //reference.setValue("llll");
@@ -316,7 +310,8 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
         // plhrofories hmera
         try {
-            FILE_NAME_SKILLS = LocalDate.now().toString()+"Skill";
+            //FILE_NAME_SKILLS = LocalDate.now().toString()+"Skill";
+            FILE_NAME_SKILLS = "Skill";
 
             fos = openFileOutput(FILE_NAME_SKILLS, MODE_APPEND);
             for (int i=0; i<Table_Skill.size();i++){
@@ -351,9 +346,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
     //Synartiseis gia FireBase---------------------------------------------------------------------------------------------
     public void uploadList(View w){
-        myList.add("12 AA");
-        myList.add("13 AA");
-        myList.add("14 AA");
+        //myList.add("12 AA");
         myList.add(Table_Skill.toString());
 
         //gia na steileis

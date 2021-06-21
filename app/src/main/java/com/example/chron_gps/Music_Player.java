@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -45,7 +46,7 @@ public class Music_Player extends AppCompatActivity {
     String sname;
     public static final String EXTRA_NAME = "song_name";
     static MediaPlayer mediaPlayer;
-    int position;
+    int position, axx;
     ArrayList<File> mySongs;
     Thread updateseekbar;
 
@@ -177,6 +178,7 @@ public class Music_Player extends AppCompatActivity {
             @Override
             public void run() {
                 int totalDuration = mediaPlayer.getDuration();
+
                 int currentposition = 0;
 
                 while (currentposition<totalDuration)
@@ -185,9 +187,11 @@ public class Music_Player extends AppCompatActivity {
                         sleep(500);
                         currentposition = mediaPlayer.getCurrentPosition();
                         seekmusic.setProgress(currentposition);
+
                     }
                     catch (InterruptedException | IllegalStateException e)
                     {
+
                         e.printStackTrace();
                     }
                 }
@@ -292,6 +296,7 @@ public class Music_Player extends AppCompatActivity {
                 save(v);
 
 
+
             }
         });
 
@@ -338,6 +343,8 @@ public class Music_Player extends AppCompatActivity {
             }
         });
 
+
+
     }
 
 
@@ -368,6 +375,7 @@ public class Music_Player extends AppCompatActivity {
         return time;
 
     }
+
 
 
 

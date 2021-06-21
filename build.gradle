@@ -3,6 +3,8 @@ buildscript {
     repositories {
         google()
         jcenter()
+        //Gia Gif
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.2.0'
@@ -17,6 +19,8 @@ allprojects {
     repositories {
         google()
         jcenter()
+        //Gia Gif
+        mavenCentral()
     }
 }
 

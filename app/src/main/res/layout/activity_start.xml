@@ -91,14 +91,14 @@
             android:gravity="center"
             android:layout_weight="0.82">
             <EditText
-                android:id="@+id/password"
+                android:id="@+id/phone"
                 android:layout_width="match_parent"
                 android:layout_height="37dp"
                 android:layout_marginLeft="40dp"
                 android:layout_marginRight="40dp"
                 android:background="@drawable/edit_txt_1_start"
                 android:fontFamily="@font/roboto_light_start"
-                android:hint="Password"
+                android:hint="Phone Number (optional)"
                 android:inputType="textPassword"
                 android:paddingLeft="20dp"
                 android:textColorHint="#DADADA" />
@@ -217,7 +217,7 @@
                 android:layout_height="45dp"
                 android:background="@drawable/ic_rectangle_grad_start"
                 android:fontFamily="@font/roboto_medium_start"
-                android:text="Log in"
+                android:text="Register"
                 android:layout_gravity="center"
                 android:textAllCaps="false"
                 android:textColor="#ffffff"

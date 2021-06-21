@@ -69,6 +69,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     private TextView textViewStepDetector;
     private SensorManager sensorManager;
     private Sensor  mStepDetector;
+    private boolean  isDetectorSensorPresent;
     int stepDetect = 0;
     // Telos StepCounter
 
@@ -133,11 +134,16 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
         //Gia to StepCounter--------------------------------------------------------------------------------------------------------------------------------------
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        textViewStepDetector = findViewById(R.id.textViewStepDetector);
+        //textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null) {
             mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+
+        }
+        else{
+            textViewStepDetector.setText("Detector Sensor is not Present");
+            isDetectorSensorPresent = false;
         }
         // Telos tou StepCounter----------------------------------------------------------------------------------------------------------------------------------
 
@@ -154,9 +160,9 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         //Telos FireBase----------------------------------------------------------------------------
 
         //gps???
-        tv_sensor = findViewById(R.id.tv_sensor);
-        tv_updates = findViewById(R.id.tv_updates);
-        sw_gps_game = findViewById(R.id.sw_gps_game);
+        //tv_sensor = findViewById(R.id.tv_sensor);
+        //tv_updates = findViewById(R.id.tv_updates);
+        //sw_gps_game = findViewById(R.id.sw_gps_game);
         sw_locationupdates_game = findViewById(R.id.sw_locationsupdates_game);
 
         locationRequest = new LocationRequest();
@@ -181,7 +187,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         };
 
 
-        sw_gps_game.setOnClickListener(new View.OnClickListener() {
+        sw_locationupdates_game.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (sw_gps_game.isChecked()) {
@@ -218,7 +224,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         textTotalDuration = findViewById(R.id.textTotalDuration);
         playerSeekBar = findViewById(R.id.playerSeekBar);
         mediaPlayer = new MediaPlayer();
-        btn_ready = findViewById(R.id.btn_ready);
+        btn_ready = findViewById(R.id.bnt_ready);
 
         playerSeekBar.setMax(100);
 
@@ -275,7 +281,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
     private void  prepareMediaPlayer(){
         try {
-            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/Tash%20Sultana%20-%20Gemini%20(Official%20Audio).mp3?alt=media&token=477d6f43-817b-4e89-bfb2-93eae32b9d2a");
+            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/diaskelismos.mp3?alt=media&token=dd92309d-4ee9-4181-ad67-f77bf34dd0f6");
             mediaPlayer.prepare();
             textTotalDuration.setText(milliSecondToTimer(mediaPlayer.getDuration()));
 
@@ -324,16 +330,17 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
     //gia gps
     private void stopLocationUpdates() {
-        tv_updates.setText("Location is NOT being tracked");
+        //tv_updates.setText("Location is NOT being tracked");
 
-        tv_sensor.setText("Not tracking location");
+        //tv_sensor.setText("Not tracking location");
+
 
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
     }
 
     private void startLocationUpdates() {
 
-        tv_updates.setText("Location is being tracked");
+        //tv_updates.setText("Location is being tracked");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -462,7 +469,9 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         FileOutputStream fos = null;
         game_count += 1;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Table_Game.add("Song no:"+game_count+" -------------------------------------------------------" + " Time: "+ currentTime);
+        Table_Game.clear();
+        Table_Game.add(" Try no:"+game_count+" Number of Steps: "+ stepDetect+" Entrie Date "+ LocalDate.now() +" Time "+currentTime);
+
 
         //Firebase---------------------------------------------------
         rootNode = FirebaseDatabase.getInstance();
@@ -472,6 +481,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
         } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
         } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Game");
+        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
         } else {reference = rootNode.getReference("New_User_Game");}
         //reference = rootNode.getReference("Game");
         //reference.setValue("llll");
@@ -523,7 +533,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         //else
         if (event.sensor == mStepDetector){
             stepDetect = (int) (stepDetect + event.values[0]);
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+            //textViewStepDetector.setText(String.valueOf(stepDetect));
         }
     }
 
@@ -554,9 +564,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
     //Synartiseis gia FireBase---------------------------------------------------------------------------------------------
     public void uploadList(View v){
-        myList.add("12 AA");
-        myList.add("13 AA");
-        myList.add("14 AA");
+        //myList.add("12 AA");
         myList.add(Table_Game.toString());
 
         //gia na steileis

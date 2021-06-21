@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class Start_Activity extends AppCompatActivity {
-    EditText email,password, name,age, weigh,usual_week_runs, tests ;
+    EditText email,phone, name,age, weigh,usual_week_runs, tests ;
     CheckBox remember;
     Button login;
     private static String FILE_NAME_INFOS ;
@@ -67,7 +67,7 @@ public class Start_Activity extends AppCompatActivity {
     public void save(View v) {
 
         email = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.password);
+        phone = (EditText) findViewById(R.id.phone);
         name = (EditText) findViewById(R.id.name);
         age = (EditText) findViewById(R.id.age);
         weigh = (EditText) findViewById(R.id.weigh);
@@ -75,7 +75,7 @@ public class Start_Activity extends AppCompatActivity {
         tests = (EditText) findViewById(R.id.tests);
 
         String Mail = email.getText().toString();
-        String Password = password.getText().toString();
+        String Phone = phone.getText().toString();
         String Name = name.getText().toString();
         String Age = age.getText().toString();
         String Weigh = weigh.getText().toString();
@@ -90,6 +90,7 @@ public class Start_Activity extends AppCompatActivity {
         } else if (Name.equals("Guru")||Name.equals("Guru ")){reference = rootNode.getReference("Guru_Infos");
         } else if (Name.equals("Moustakas")||Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Infos");
         } else if (Name.equals("Levis")||Name.equals("Levis ")){reference = rootNode.getReference("Levis_Infos");
+        } else if (Name.equals("Dad")||Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
         } else {reference = rootNode.getReference("New_User_Infos");}
 
 
@@ -108,12 +109,15 @@ public class Start_Activity extends AppCompatActivity {
         FileOutputStream fos = null;
 
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Infos.add("Name:"+ Name +" Age:"+ Age +" Weigh:"+ Weigh + " Usual week runs:"+ U_w_runs + " Tests:"+ Tests +" Email:"+ Mail + " Password:"+ Password +" Entrie Date"+currentTime);
+        Infos.clear();
+        Infos.add("Name: "+ Name +" Age: "+ Age +" Weigh: "+ Weigh + " Usual week runs: "+ U_w_runs + " Tests: "+ Tests +" Email: "+ Mail + " Phone: "+ Phone +" Entrie Date "+ LocalDate.now() +" Time "+currentTime);
 
 
         // plhrofories hmera
         try {
-            FILE_NAME_INFOS = LocalDate.now().toString()+"Infos";
+//            FILE_NAME_INFOS = LocalDate.now().toString()+"Infos";
+            FILE_NAME_INFOS = "Infos";
+
             fos = openFileOutput(FILE_NAME_INFOS, MODE_APPEND);
             for (int i=0; i< Infos.size(); i++)
                 fos.write(((Infos.get(i)+"\n").getBytes()));
@@ -122,7 +126,7 @@ public class Start_Activity extends AppCompatActivity {
 
 
             email.getText().clear();
-            password.getText().clear();
+            phone.getText().clear();
             name.getText().clear();
             age.getText().clear();
             weigh.getText().clear();
@@ -168,23 +172,7 @@ public class Start_Activity extends AppCompatActivity {
 
         //Telos FireBase----------------------------------------------------------------------------
 
-        //
-        //button = findViewById(R.id.button);
 
-
-        //button.setOnClickListener(new View.OnClickListener() {
-            //@Override
-            //public void onClick(View v) {
-               //rootNode = FirebaseDatabase.getInstance();
-               //reference = rootNode.getReference("users");
-               //reference.setValue("bbbbssss");
-               ////FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-                ////Intent intent = new Intent(Start_Activity.this, MainActivity.class);
-                ////intent.put
-
-           //}
-        //;
-        //
 
 
 
@@ -262,9 +250,7 @@ public class Start_Activity extends AppCompatActivity {
 
     //Synartiseis gia FireBase---------------------------------------------------------------------------------------------
     public void uploadList(View v){
-        myList.add("12 AA");
-        myList.add("13 AA");
-        myList.add("14 AA");
+        //myList.add("12 AA");
         myList.add(Infos.toString());
 
         //gia na steileis

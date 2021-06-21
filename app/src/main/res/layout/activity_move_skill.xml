@@ -13,12 +13,21 @@
         android:scaleType="centerCrop"
         android:src="@drawable/move_skill" />
 
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gif"
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:src="@drawable/justcolor"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
         android:text="Lets see your\n     Moves!"
         android:textColor="@android:color/white"
@@ -29,18 +38,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ImageView
-        android:id="@+id/Done_check"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="center"
-        android:layout_marginLeft="200dp"
-        android:src="@drawable/check_skill"
+    <TextView
+        android:id="@+id/explenation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="110dp"
+        android:text="Hop with the beat "
+        android:textColor="@color/white_pressed"
+        android:textSize="30sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="136dp"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,8 +78,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="60dp"
+            android:layout_margin="40dp"
             android:gravity="center_vertical"
+            android:layout_marginBottom="0dp"
             android:orientation="horizontal">
 
 
@@ -83,11 +96,10 @@
 
             <SeekBar
                 android:id="@+id/playerSeekBar"
-                android:layout_width="286dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="1dp"
-                android:layout_weight="1" />
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_marginBottom="0dp"
+                 />
 
             <TextView
                 android:id="@+id/textTotalDuration"
@@ -111,9 +123,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="70dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
                 android:backgroundTint="#4E525B"
                 android:elevation="0dp"
                 android:src="@drawable/round_arrow_forward_24"
@@ -124,29 +135,18 @@
 
             <Button
                 android:id="@+id/bnt_next"
-                android:layout_width="48dp"
+                android:layout_width="55dp"
                 android:layout_height="47dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:layout_alignTop="@+id/bnt_nextt"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="19dp"
-                android:layout_marginEnd="83dp"
-                android:layout_marginBottom="0dp"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="5dp"
                 tools:ignore="NotSibling"></Button>
 
 
-            <TextView
-                android:id="@+id/textViewStepDetector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="104dp"
-                android:layout_toStartOf="@+id/bnt_nextt"
-                android:text="Step Detector"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.507"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="247dp" />
+
 
         </RelativeLayout>
 

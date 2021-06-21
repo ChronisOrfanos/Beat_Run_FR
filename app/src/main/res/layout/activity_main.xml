@@ -7,6 +7,219 @@
     android:background="#8F8F8F"
     tools:context=".MainActivity">
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/old_man_run"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        style="@style/custom_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="200dp"
+        app:fab_addButtonColorNormal="@color/pink"
+        app:fab_addButtonColorPressed="@color/pink_pressed"
+        app:fab_addButtonPlusIconColor="@color/av_dark_blue"
+        app:fab_expandDirection="down"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="0dp"
+            android:orientation="horizontal">
+
+
+
+            <TextView
+                android:id="@+id/textCurrentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textColor="#212121"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <SeekBar
+                android:id="@+id/playerSeekBar"
+                android:layout_width="200dp"
+                android:layout_height="20dp"
+                android:layout_marginBottom="0dp"
+                />
+
+            <TextView
+                android:id="@+id/textTotalDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textColor="#212121"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/imagePlayPause"
+            android:layout_width="80dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_play_game" />
+
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/down_try"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/headphones"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_Music"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/explenation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Run with the beat "
+            android:textColor="@color/white_pressed"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <Switch
+            android:id="@+id/sw_locationsupdates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="Location Updates"
+            android:textColor="#E8D10B"
+            android:textSize="10sp"
+            android:thumbTint="#00BCD4"
+            tools:ignore="MissingConstraints" />
+
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+
+
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:layout_width="60dp"
+        android:layout_height="20dp"
+        app:fab_addButtonColorNormal="@color/pink"
+        app:fab_addButtonColorPressed="@color/pink_pressed"
+        app:fab_addButtonPlusIconColor="@color/av_dark_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:fab_expandDirection="down"
+        app:fab_labelStyle="@style/custom_fab"
+        tools:ignore="MissingConstraints">
+
+
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/giagia"
+            app:fab_size="mini"
+            app:fab_title="Chronis" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/xiro"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_size="mini"
+            app:fab_title="Xiro" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/moustakas"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_size="mini"
+            app:fab_title="Moustakas" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/guru"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_size="mini"
+            app:fab_title="Guru" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/sous"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_size="mini"
+            app:fab_title="Sousanis" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/levis"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_size="mini"
+            app:fab_title="Levis" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/dady"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_size="mini"
+            app:fab_title="Dady" />
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_action8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/cardview_dark_background"
+            app:fab_colorPressed="@color/av_yellow"
+            app:fab_icon="@drawable/newuser"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_size="mini"
+            app:fab_title="NewUser" />
+
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
+
+
+
 
     <EditText
         android:id="@+id/edit_text"
@@ -20,121 +233,78 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"></EditText>
 
-    <TextView
-        android:id="@+id/tv_labelsensor"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Sensor:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E8D10B"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sw_gps" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_labelsensor"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Sensor:"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:textColor="#E8D10B"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/sw_gps" />-->
 
-    <TextView
-        android:id="@+id/tv_sensor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cell Tower + Wifi"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E8D10B"
-        android:textColorHighlight="#FAF1F1"
-        app:layout_constraintStart_toEndOf="@+id/tv_labelsensor"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelsensor" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_sensor"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Cell Tower + Wifi"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:textColor="#E8D10B"-->
+<!--        android:textColorHighlight="#FAF1F1"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tv_labelsensor"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/tv_labelsensor" />-->
 
-    <TextView
-        android:id="@+id/tv_labelupdates"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Updates:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E8D10B"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sw_locationsupdates" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_labelupdates"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Updates:"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:textColor="#E8D10B"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/sw_locationsupdates" />-->
 
-    <TextView
-        android:id="@+id/tv_updates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Off"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#E8D10B"
-        app:layout_constraintStart_toEndOf="@+id/tv_labelupdates"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelupdates" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_updates"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Off"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+<!--        android:textColor="#E8D10B"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/tv_labelupdates"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/tv_labelupdates" />-->
 
-    <Switch
-        android:id="@+id/sw_locationsupdates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="true"
-        android:switchTextAppearance="@style/TextAppearance.AppCompat.Large"
-        android:text="Location Updates"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E8D10B"
-        android:thumbTint="#00BCD4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.431"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="81dp"
-        tools:ignore="MissingConstraints" />
+<!--    <Switch-->
+<!--        android:id="@+id/sw_locationsupdates"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:checked="false"-->
+<!--        android:switchTextAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:text="Location Updates"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:textColor="#E8D10B"-->
+<!--        android:thumbTint="#00BCD4"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.083"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        tools:ignore="MissingConstraints"-->
+<!--        tools:layout_editor_absoluteY="164dp" />-->
 
-    <Switch
-        android:id="@+id/sw_gps"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="GPS/SavePower"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E8D10B"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates" />
 
-    <TextView
-        android:id="@+id/tv_labelCrumbCounte"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="WayPoints"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:textColor="#E8D10B"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelsensor" />
-
-    <TextView
-        android:id="@+id/tv_countOfCrumbs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/tv_labelCrumbCounte"
-        app:layout_constraintTop_toTopOf="@+id/tv_labelCrumbCounte" />
-
-    <Button
-        android:id="@+id/btn_newWayPoint"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:backgroundTint="#E8D10B"
-        android:text="New WayPoint"
-        android:textColor="#000000"
-        android:textColorLink="#151313"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_labelCrumbCounte" />
-
-    <Button
-        android:id="@+id/btn_showWayPointList"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#E8D10B"
-        android:text="Show waypoint List"
-        android:textColor="#000000"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_newWayPoint" />
+<!--    <Switch-->
+<!--        android:id="@+id/sw_gps"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="GPS/SavePower"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        android:textColor="#E8D10B"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/sw_locationsupdates"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.078"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates" />-->
 
     <Button
         android:id="@+id/btn_save"
@@ -142,15 +312,15 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="88dp"
         android:backgroundTint="#E8D10B"
-
         android:onClick="save"
         android:text="save error"
+        app:layout_constraintBottom_toTopOf="@+id/btn_music"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_showWayPointList"
         tools:ignore="MissingConstraints" />
+
+    >
 
     <Button
         android:id="@+id/btn_music"
@@ -163,19 +333,12 @@
         android:onClick="save"
 
         android:text="Music"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_save" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/down"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Download Songs"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_music" />
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

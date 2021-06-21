@@ -1,26 +1,38 @@
 package com.example.chron_gps;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -52,8 +64,8 @@ import java.util.Locale;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class MainActivity extends AppCompatActivity {
-    public static final int DEFAULT_UPDATE_INTERVAL = 30;
-    public static final int FAST_UPDATE_INTERVAL = 5;
+    public static final int DEFAULT_UPDATE_INTERVAL = 5;
+    public static final int FAST_UPDATE_INTERVAL = 3;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     private static String FILE_ERROR ;
     private static String FILE_DATA ;
@@ -73,6 +85,17 @@ public class MainActivity extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
     String currentTime;
 
+
+    //Gia Imerisio----------------------------------------------------------------------------------
+    private ImageView imagePlayPause;
+    private TextView textCurrentTime, textTotalDuration;
+    private SeekBar playerSeekBar;
+    private MediaPlayer mediaPlayer;
+    private Handler handler = new Handler();
+
+    //Telos gia Imerisio----------------------------------------------------------------------------
+
+
     //Gia INTENT---------------------------------------------
     String User_Name;
     String userName;
@@ -90,10 +113,9 @@ public class MainActivity extends AppCompatActivity {
     //FireBase Download-----------------------------------------------------------------------------
     FirebaseStorage firebaseStorage;
     StorageReference storageReference;
-
-
     ArrayList <StorageReference> reflist = new ArrayList<>();
     StorageReference ref1,ref2,ref3,ref4,ref5,ref6,ref7,ref8,ref9,ref10;
+    int User;
     //Telos FireBase Download-----------------------------------------------------------------------
 
 
@@ -101,8 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
     // references to the UI elements
 
-    TextView  tv_sensor, tv_updates,  tv_wayPointsCounts;
-    Button btn_newWaypoint, btn_showWayPointList, btn_save, btn_music, down;
+    TextView  tv_sensor, tv_updates;
+    Button btn_save, btn_music, btn_day_muisc;
+    ImageView down_try;
 
     Switch sw_locationupdates, sw_gps;
 
@@ -133,24 +156,43 @@ public class MainActivity extends AppCompatActivity {
         FileOutputStream fos = null;
         Error_pointer += 1;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Table_Errors_1.clear();
+        //Table_Errors_1.clear();
         Table_Errors_1.add("Error no:"+Error_pointer+" Error: "+ text + " Time: "+ currentTime);
 
 
 
         //Firebase
         rootNode = FirebaseDatabase.getInstance();
-        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Runs");
-        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Runs");
-        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Runs");
-        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Runs");
-        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Runs");
-        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Levis_Runs");
-        } else {reference = rootNode.getReference("New_User_Runs");}
-        //reference = rootNode.getReference("sooo");
-        //reference.setValue("llll");
+//
+//        if(User_Name !=null){
+//        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Runs");
+//        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Runs");
+//        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Runs");
+//        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Runs");
+//        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Runs");
+//        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Levis_Runs");
+//        } else {reference = rootNode.getReference("New_User_Runs");}
+//        //reference = rootNode.getReference("sooo");
+//        //reference.setValue("llll");
+//
+//        }else if (User==1){reference =rootNode.getReference("Chronis_Runs");
+//        }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
+//        }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
+//        }else if (User==4){reference =rootNode.getReference("Guru_Runs");
+//        }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
+//        }else if (User==6){reference =rootNode.getReference("Levis_Runs");
+//        }else {reference =rootNode.getReference("New_User_Runs");}
+//        uploadList(v);
 
-        uploadList(v);
+      if (User==1){reference =rootNode.getReference("Chronis_Runs");
+      }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
+      }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
+      }else if (User==4){reference =rootNode.getReference("Guru_Runs");
+      }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
+      }else if (User==6){reference = rootNode.getReference("Levis_Runs");
+      }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
+      }else {reference =rootNode.getReference("New_User_Runs");}
+      uploadList(v);
 
 
 
@@ -190,22 +232,101 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
 
-        //Gia FireBase Download---------------------------------------------------------------------
-        down = findViewById(R.id.down);
 
-        down.setOnClickListener(new View.OnClickListener() {
+        //Gia Imerisio
+        imagePlayPause = findViewById(R.id.imagePlayPause);
+        textCurrentTime =  findViewById(R.id.textCurrentTime);
+        textTotalDuration = findViewById(R.id.textTotalDuration);
+        playerSeekBar = findViewById(R.id.playerSeekBar);
+        mediaPlayer = new MediaPlayer();
+        playerSeekBar.setMax(100);
+        //Telos gia Imerisio
+
+        //Gia FireBase Download---------------------------------------------------------------------
+        down_try =  findViewById(R.id.down_try);
+        down_try.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onTouch(View v, MotionEvent event) {
                 download(userName);
+                return false;
             }
         });
         //Telos FireBase Download-------------------------------------------------------------------
+
+        //Gia thn koumpara---------------------------------------
+
+        FloatingActionButton fab1 = findViewById(R.id.fab_action1);
+        fab1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Τρέχα μωρή χοντρή");
+            //userName = "Chronis";
+                User=1;
+            }
+        });
+
+        FloatingActionButton fab2 = findViewById(R.id.fab_action2);
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Welcome Xirako");
+                User=2;
+            }
+        });
+
+        FloatingActionButton fab3 = findViewById(R.id.fab_action3);
+        fab3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Welcome k.Moustaka");
+                User=3;
+            }
+        });
+        FloatingActionButton fab4 = findViewById(R.id.fab_action4);
+        fab4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Welcome Trele Guru!");
+                User=4;
+            }
+        });
+        FloatingActionButton fab5 = findViewById(R.id.fab_action5);
+        fab5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Τι κάνεις μωρή τσουτσού ");
+                User=5;
+            }
+        });
+        FloatingActionButton fab6 = findViewById(R.id.fab_action6);
+        fab6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Γεια σου Μαούση");
+                User=6;
+            }
+        });
+        FloatingActionButton fab7 = findViewById(R.id.fab_action7);
+        fab7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Τρέχα γέρο");
+                User=7;
+            }
+        });
+        FloatingActionButton fab8 = findViewById(R.id.fab_action8);
+        fab8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { showToast("Καλως ήρθες νέος");
+                User=8;
+            }
+        });
+
+        // Telos koumparas---------------------------------------
+
+
 
 
         //Gia to INTENT-----------------------------------------------------------------------------
@@ -213,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
         String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
         User_Name = Name_Activity_1;
 
-        userName = Name_Activity_1;
+        //userName = User_Name;
 
         //Intent intent1 = getIntent();
         //String Name_Activity_2 =intent1.getStringExtra(Start_Activity.Share_User_2);
@@ -238,19 +359,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
+
         //gia to grapsimo sthn othonh
         mEditText = findViewById(R.id.edit_text);
 
         // give each UI variable a value
 
 
-        tv_sensor = findViewById(R.id.tv_sensor);
-        tv_updates = findViewById(R.id.tv_updates);
-        sw_gps = findViewById(R.id.sw_gps);
+        //tv_sensor = findViewById(R.id.tv_sensor);
+        //tv_updates = findViewById(R.id.tv_updates);
+        //sw_gps = findViewById(R.id.sw_gps);
         sw_locationupdates = findViewById(R.id.sw_locationsupdates);
-        btn_newWaypoint = findViewById(R.id.btn_newWayPoint);
-        btn_showWayPointList = findViewById(R.id.btn_showWayPointList);
-        tv_wayPointsCounts = findViewById(R.id.tv_countOfCrumbs);
 
         locationRequest = new LocationRequest();
 
@@ -271,43 +392,12 @@ public class MainActivity extends AppCompatActivity {
                 // save the location
                 updateUIValues(locationResult.getLastLocation());
             }
+
         };
 
-        btn_newWaypoint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //get the gps location
-
-                //add the new location to the global list
-                MyApplication myApplication = (MyApplication)getApplicationContext();
-                savedLocations = myApplication.getMyLocations();
-                savedLocations.add(currentLocation);
-            }
-        });
 
 
-        btn_showWayPointList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, ShowSavedLocationLists.class);
-                startActivity(i);
-            }
-        });
 
-        sw_gps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sw_gps.isChecked()) {
-                    //most accurate - use GPS
-                    locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                    tv_sensor.setText("Using GPS sensors");
-                } else {
-                    locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-                    tv_sensor.setText("Using Towers + WIFI");
-                }
-
-            }
-        });
 
         sw_locationupdates.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,8 +414,54 @@ public class MainActivity extends AppCompatActivity {
 
         updateGPS();
 
-    }// end onCreate method
 
+
+        //Gia Imerisio------------------------------------------------------------------------------
+        imagePlayPause.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                if (mediaPlayer.isPlaying()) {
+                    handler.removeCallbacks(updater);
+                    mediaPlayer.pause();
+                    imagePlayPause.setImageResource(R.drawable.ic_play_game);
+                } else {
+                    mediaPlayer.start();
+                    imagePlayPause.setImageResource(R.drawable.ic_pause_game);
+                    updateSeekBar();
+                    save(v);
+                }
+            }
+
+
+
+        });
+
+        prepareMediaPlayer();
+
+        // An to vgalw ayto tote o allos den mporei na proxwraei to kommati klp sto seekBar kai elitoyrgei kanonika o ypoloipo
+        playerSeekBar.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                SeekBar seekBar = (SeekBar) view;
+                int playsPosition =  (mediaPlayer.getDuration() / 100) * seekBar.getProgress();
+                mediaPlayer.seekTo(playsPosition);
+                textCurrentTime.setText(milliSecondToTimer(mediaPlayer.getCurrentPosition()));
+                return false;
+            }
+        });
+        //Telos gia Imerisio------------------------------------------------------------------------
+
+    }// end onCreate method++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+    //Gia thn koumpara---------------------------------------
+
+    public void showToast(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+    // Telos koumparas---------------------------------------
 
     //Gia to FireBase Download----------------------------------------------------------------------
     public void download(String userName)
@@ -335,9 +471,9 @@ public class MainActivity extends AppCompatActivity {
 
         storageReference = firebaseStorage.getInstance().getReference();
 
-        if (userName.equals("Chronis")||userName.equals("Chronis "))
-        {ref1 = storageReference.child("John").child("1.mp3");
-            ref2 = storageReference.child("").child("2.mp3");
+        if (User==1)//    if (userName.equals("Chronis")||userName.equals("Chronis "))
+        {ref1 = storageReference.child("Chronis").child("1.mp3");
+            ref2 = storageReference.child("Chronis").child("2.mp3");
             ref3 = storageReference.child("Chronis").child("3.mp3");
             ref4 = storageReference.child("Chronis").child("4.mp3");
             ref5 = storageReference.child("Chronis").child("5.mp3");
@@ -346,7 +482,7 @@ public class MainActivity extends AppCompatActivity {
             ref8 = storageReference.child("Chronis").child("8.mp3");
             ref9 = storageReference.child("Chronis").child("9.mp3");
             ref10 = storageReference.child("Chronis").child("10.mp3");
-        }else if(userName.equals("Xirorafas")||userName.equals("Xirorafas ")){
+        }else if(User==2){
             ref1 = storageReference.child("Xirorafas").child("1.mp3");
             ref2 = storageReference.child("Xirorafas").child("2.mp3");
             ref3 = storageReference.child("Xirorafas").child("3.mp3");
@@ -357,7 +493,7 @@ public class MainActivity extends AppCompatActivity {
             ref8 = storageReference.child("Xirorafas").child("8.mp3");
             ref9 = storageReference.child("Xirorafas").child("9.mp3");
             ref10 = storageReference.child("Xirorafas").child("10.mp3");
-        }else if(userName.equals("Sousanis")||userName.equals("Sousanis ")){
+        }else if(User==3){
             ref1 = storageReference.child("Sousanis").child("1.mp3");
             ref2 = storageReference.child("Sousanis").child("2.mp3");
             ref3 = storageReference.child("Sousanis").child("3.mp3");
@@ -368,7 +504,7 @@ public class MainActivity extends AppCompatActivity {
             ref8 = storageReference.child("Sousanis").child("8.mp3");
             ref9 = storageReference.child("Sousanis").child("9.mp3");
             ref10 = storageReference.child("Sousanis").child("10.mp3");
-        }else if(userName.equals("Guru")||userName.equals("Guru ")){
+        }else if(User==4){
             ref1 = storageReference.child("Guru").child("1.mp3");
             ref2 = storageReference.child("Guru").child("2.mp3");
             ref3 = storageReference.child("Guru").child("3.mp3");
@@ -379,7 +515,7 @@ public class MainActivity extends AppCompatActivity {
             ref8 = storageReference.child("Guru").child("8.mp3");
             ref9 = storageReference.child("Guru").child("9.mp3");
             ref10 = storageReference.child("Guru").child("10.mp3");
-        }else if(userName.equals("Moustakas")||userName.equals("Moustakas ")){
+        }else if(User==5){
             ref1 = storageReference.child("Moustakas").child("1.mp3");
             ref2 = storageReference.child("Moustakas").child("2.mp3");
             ref3 = storageReference.child("Moustakas").child("3.mp3");
@@ -390,7 +526,7 @@ public class MainActivity extends AppCompatActivity {
             ref8 = storageReference.child("Moustakas").child("8.mp3");
             ref9 = storageReference.child("Moustakas").child("9.mp3");
             ref10 = storageReference.child("Moustakas").child("10.mp3");
-        }else if(userName.equals("Levis")||userName.equals("Levis ")){
+        }else if(User==6){
             ref1 = storageReference.child("Levis").child("1.mp3");
             ref2 = storageReference.child("Levis").child("2.mp3");
             ref3 = storageReference.child("Levis").child("3.mp3");
@@ -401,6 +537,17 @@ public class MainActivity extends AppCompatActivity {
             ref8 = storageReference.child("Levis").child("8.mp3");
             ref9 = storageReference.child("Levis").child("9.mp3");
             ref10 = storageReference.child("Levis").child("10.mp3");
+        }else if(User==7){
+            ref1 = storageReference.child("Dady").child("1.mp3");
+            ref2 = storageReference.child("Dady").child("2.mp3");
+            ref3 = storageReference.child("Dady").child("3.mp3");
+            ref4 = storageReference.child("Dady").child("4.mp3");
+            ref5 = storageReference.child("Dady").child("5.mp3");
+            ref6 = storageReference.child("Dady").child("6.mp3");
+            ref7 = storageReference.child("Dady").child("7.mp3");
+            ref8 = storageReference.child("Dady").child("8.mp3");
+            ref9 = storageReference.child("Dady").child("9.mp3");
+            ref10 = storageReference.child("Dady").child("10.mp3");
         }else{ref1 = storageReference.child("New_User").child("1.mp3");
             ref2 = storageReference.child("New_User").child("2.mp3");
             ref3 = storageReference.child("New_User").child("3.mp3");
@@ -434,7 +581,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "1", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "a1_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -446,7 +593,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "2", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "b2_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -457,7 +604,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "3", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "c3_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -469,7 +616,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "4", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "d4_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -481,7 +628,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "5", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "e5_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -493,7 +640,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "6", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "f6_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -505,7 +652,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "7", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "g7_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -517,7 +664,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "8", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "h8_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -529,7 +676,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "9", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "i9_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -541,7 +688,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(Uri uri) {
                 String url=uri.toString();
-                downloadFile(MainActivity.this, "10", ".mp3",DIRECTORY_DOWNLOADS,url);
+                downloadFile(MainActivity.this, "j10_run", ".mp3",DIRECTORY_DOWNLOADS,url);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -573,16 +720,16 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void stopLocationUpdates() {
-        tv_updates.setText("Location is NOT being tracked");
+        //tv_updates.setText("Location is NOT being tracked");
 
-        tv_sensor.setText("Not tracking location");
+        //tv_sensor.setText("Not tracking location");
 
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
     }
 
     private void startLocationUpdates() {
 
-        tv_updates.setText("Location is being tracked");
+        //tv_updates.setText("Location is being tracked");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -664,15 +811,13 @@ public class MainActivity extends AppCompatActivity {
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 
         Table_Data_1.clear();
-        Table_Data_1.add("Enhmerwsh no:"+Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime);
+        Table_Data_1.add("User: "+User+ "Enhmerwsh no:"+ Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime);
 
 
 
-        MyApplication myApplication = (MyApplication)getApplicationContext();
-        savedLocations = myApplication.getMyLocations();
 
-        //show the number of wayponits saved.
-        tv_wayPointsCounts.setText(Integer.toString(savedLocations.size()));
+
+
 
 
 
@@ -711,6 +856,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     //Gia thn mousikh
     public void openMusic_List(){
         Intent intent = new Intent(this, Music_List.class);
@@ -719,10 +865,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
+
     public void uploadList(View v){
-        myList.add("12 AA");
-        myList.add("13 AA");
-        myList.add("14 AA");
+        myList.add("New Button Data");
         myList.add(Table_Data_1.toString());
 
         //gia na steileis
@@ -789,6 +935,58 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    //Gia Imerisio----------------------------------------------------------------------------------
+    private void  prepareMediaPlayer(){
+        try {
+            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/diaskelismos.mp3?alt=media&token=dd92309d-4ee9-4181-ad67-f77bf34dd0f6");
+            mediaPlayer.prepare();
+            textTotalDuration.setText(milliSecondToTimer(mediaPlayer.getDuration()));
+
+        } catch (Exception exception){
+            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private Runnable updater = new Runnable() {
+        @Override
+        public void run() {
+            updateSeekBar();
+            long currenDuration = mediaPlayer.getDuration();
+            textCurrentTime.setText(milliSecondToTimer(currenDuration));
+        }
+    };
+
+    private void  updateSeekBar(){
+        if (mediaPlayer.isPlaying()) {
+            playerSeekBar.setProgress((int) (((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100));
+            handler.postDelayed(updater, 1000);
+
+        }
+    }
+
+    private String milliSecondToTimer(long milliSeconds){
+        String timerString = "";
+        String secondString;
+
+        int hours = (int) (milliSeconds / (1000 *60 * 60));
+        int minutes = (int) (milliSeconds % (1000 * 60 * 60)) / (1000 * 60);
+        int seconds = (int) ((milliSeconds % (1000 * 60 * 60)) % (1000 * 60) / 1000);
+
+        if (hours > 0) {
+            timerString = hours + ":";
+        }
+        if (seconds < 10){
+            secondString = "0" + seconds;
+        } else {
+            secondString = "" + seconds;
+        }
+
+        timerString = timerString + minutes + ":" + secondString;
+        return timerString;
+
+    }
+    //Telso gia Imerisio----------------------------------------------------------------------------
 }
 
 //// Mouaxaxaxaxa
