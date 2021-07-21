@@ -6,11 +6,13 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,11 +23,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.view.Menu;
-import android.view.View;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -49,7 +47,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -73,11 +77,21 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    int Update_pointer = 0;
+
+    //Gia to GraphView--------------------------------------------------------------------------
+
+    LineGraphSeries<DataPoint> series;
+    ArrayList<Integer> Graph_Points_x = new ArrayList<Integer>();
+    ArrayList<Integer> Graph_Points_y = new ArrayList<Integer>();
+
+    // Telos tou GraphView----------------------------------------------------------------------
+
+    int start = 0;
+
     int Error_pointer = 0;
 
-    ArrayList<String> Table_Data_1 = new ArrayList<String>();
-    ArrayList<String> Table_Errors_1 = new ArrayList<String>();
+    ArrayList<String> Run_Data = new ArrayList<String>();
+    ArrayList<String> Errors_Data = new ArrayList<String>();
 
 
     EditText mEditText;
@@ -97,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Gia INTENT---------------------------------------------
-    String User_Name;
+    String User_Name;//auto logika pleon axristo MALLON
     String userName;
     //String User_Name_tel;
 
@@ -124,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     // references to the UI elements
 
     TextView  tv_sensor, tv_updates;
-    Button btn_save, btn_music, btn_day_muisc;
+    Button btn_save, btn_music, btn_day_muisc,btn_destroy;
     ImageView down_try;
 
     Switch sw_locationupdates, sw_gps;
@@ -154,10 +168,10 @@ public class MainActivity extends AppCompatActivity {
     public void save(View v) {
         String text = mEditText.getText().toString();
         FileOutputStream fos = null;
-        Error_pointer += 1;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         //Table_Errors_1.clear();
-        Table_Errors_1.add("Error no:"+Error_pointer+" Error: "+ text + " Time: "+ currentTime);
+        Errors_Data.add(" Error: "+ text + " Time: "+ currentTime +" Date "+LocalDate.now());
+
 
 
 
@@ -196,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         //
 
 
@@ -204,8 +220,8 @@ public class MainActivity extends AppCompatActivity {
         try {
             FILE_ERROR = LocalDate.now().toString()+"Errors.txt";
             fos = openFileOutput(FILE_ERROR, MODE_APPEND);
-            for (int i=0; i< Table_Errors_1.size(); i++)
-                fos.write(((Table_Errors_1.get(i)+"\n").getBytes()));
+            for (int i=0; i< Errors_Data.size(); i++)
+                fos.write(((Errors_Data.get(i)+"\n").getBytes()));
             //fos.write(((Table_Errors)+"\n").getBytes());
 
 
@@ -240,6 +256,84 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
+        //Gia to xrwma tou Activity
+        statusbarcolor();
+        //Telos gia to xrwma tou Actiity
+
+        //Gia to GraphView--------------------------------------------------------------------------
+        double x,y;
+        x=0.0;
+        y=3.0;
+
+//        Graph_Points_x.clear();
+//        Graph_Points_y.clear();
+//
+//for (int i=0; i<15; i=i+3){
+//            Graph_Points_x.add(i);
+//        }
+//        Graph_Points_y.add(2);
+//        Graph_Points_y.add(3);
+//        Graph_Points_y.add(2);
+//        Graph_Points_y.add(1);
+//        Graph_Points_y.add(0);
+//        Graph_Points_y.add(3);
+//        Graph_Points_y.add(2);
+//        Graph_Points_y.add(3);
+//        Graph_Points_y.add(2);
+//        Graph_Points_y.add(3);
+//        Graph_Points_y.add(0);
+//        Graph_Points_y.add(1);
+//        Graph_Points_y.add(2);
+//        Graph_Points_y.add(3);
+//        Graph_Points_y.add(4);
+//
+//        Graph_Points_x.add(2);
+//        Graph_Points_x.add(3);
+//        Graph_Points_x.add(2);
+//        Graph_Points_x.add(1);
+//        Graph_Points_x.add(0);
+//        Graph_Points_x.add(3);
+//        Graph_Points_x.add(2);
+//        Graph_Points_x.add(3);
+//        Graph_Points_x.add(2);
+//        Graph_Points_x.add(3);
+//        Graph_Points_x.add(0);
+//        Graph_Points_x.add(1);
+//        Graph_Points_x.add(2);
+//        Graph_Points_x.add(3);
+//        Graph_Points_x.add(4);
+
+
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        series = new LineGraphSeries<DataPoint>();
+        for (int i = 0; i<10; i++){
+            x = x + 3;
+//            y = y + 1;
+            y = Math.sin(x);
+//            x = Graph_Points_x.get(i);
+//            y = Graph_Points_y.get(i);
+            series.appendData(new DataPoint(x,y), true, 400);
+        }
+        graph.addSeries(series);
+
+
+        // Telos tou GraphView----------------------------------------------------------------------
+
+        //Gia Backround-----------------------------------------------------------------------------
+        Intent intentBack = new Intent(this,MyService.class);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        {
+            startForegroundService(intentBack);
+        }
+        else
+            {
+                startService(intentBack);
+            }
+        //Telos gia Backround-----------------------------------------------------------------------
 
 
         //Gia Imerisio
@@ -334,6 +428,8 @@ public class MainActivity extends AppCompatActivity {
         String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
         User_Name = Name_Activity_1;
 
+
+
         //userName = User_Name;
 
         //Intent intent1 = getIntent();
@@ -348,13 +444,35 @@ public class MainActivity extends AppCompatActivity {
         //
 
 
-        //gia thn mousikh
+        //gia thn mousikh---
 
         btn_music = findViewById(R.id.btn_music);
         btn_music.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openMusic_List();
+
+
+            }
+        });
+        //Telos gia mousikh
+
+
+
+
+
+
+        btn_destroy = findViewById(R.id.btn_destroy);
+        btn_destroy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                finish();   etsi lagarei toulaxiston
+//                onDestroy();
+                onDestroy();
+                finish();
+                Intent intent_arx = new Intent(MainActivity.this, Start_Activity.class );
+                startActivity(intent_arx);
+
 
             }
         });
@@ -420,6 +538,7 @@ public class MainActivity extends AppCompatActivity {
         imagePlayPause.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
+
             public void onClick(View v) {
                 if (mediaPlayer.isPlaying()) {
                     handler.removeCallbacks(updater);
@@ -431,7 +550,12 @@ public class MainActivity extends AppCompatActivity {
                     updateSeekBar();
                     save(v);
                 }
+                start=start+1;
+
+
             }
+
+
 
 
 
@@ -473,91 +597,92 @@ public class MainActivity extends AppCompatActivity {
 
         if (User==1)//    if (userName.equals("Chronis")||userName.equals("Chronis "))
         {ref1 = storageReference.child("Chronis").child("1.mp3");
-            ref2 = storageReference.child("Chronis").child("2.mp3");
-            ref3 = storageReference.child("Chronis").child("3.mp3");
-            ref4 = storageReference.child("Chronis").child("4.mp3");
-            ref5 = storageReference.child("Chronis").child("5.mp3");
-            ref6 = storageReference.child("Chronis").child("6.mp3");
-            ref7 = storageReference.child("Chronis").child("7.mp3");
-            ref8 = storageReference.child("Chronis").child("8.mp3");
-            ref9 = storageReference.child("Chronis").child("9.mp3");
-            ref10 = storageReference.child("Chronis").child("10.mp3");
+//            ref2 = storageReference.child("Chronis").child("2.mp3");
+//            ref3 = storageReference.child("Chronis").child("3.mp3");
+//            ref4 = storageReference.child("Chronis").child("4.mp3");
+//            ref5 = storageReference.child("Chronis").child("5.mp3");
+//            ref6 = storageReference.child("Chronis").child("6.mp3");
+//            ref7 = storageReference.child("Chronis").child("7.mp3");
+//            ref8 = storageReference.child("Chronis").child("8.mp3");
+//            ref9 = storageReference.child("Chronis").child("9.mp3");
+//            ref10 = storageReference.child("Chronis").child("10.mp3");
         }else if(User==2){
             ref1 = storageReference.child("Xirorafas").child("1.mp3");
-            ref2 = storageReference.child("Xirorafas").child("2.mp3");
-            ref3 = storageReference.child("Xirorafas").child("3.mp3");
-            ref4 = storageReference.child("Xirorafas").child("4.mp3");
-            ref5 = storageReference.child("Xirorafas").child("5.mp3");
-            ref6 = storageReference.child("Xirorafas").child("6.mp3");
-            ref7 = storageReference.child("Xirorafas").child("7.mp3");
-            ref8 = storageReference.child("Xirorafas").child("8.mp3");
-            ref9 = storageReference.child("Xirorafas").child("9.mp3");
-            ref10 = storageReference.child("Xirorafas").child("10.mp3");
+//            ref2 = storageReference.child("Xirorafas").child("2.mp3");
+//            ref3 = storageReference.child("Xirorafas").child("3.mp3");
+//            ref4 = storageReference.child("Xirorafas").child("4.mp3");
+//            ref5 = storageReference.child("Xirorafas").child("5.mp3");
+//            ref6 = storageReference.child("Xirorafas").child("6.mp3");
+//            ref7 = storageReference.child("Xirorafas").child("7.mp3");
+//            ref8 = storageReference.child("Xirorafas").child("8.mp3");
+//            ref9 = storageReference.child("Xirorafas").child("9.mp3");
+//            ref10 = storageReference.child("Xirorafas").child("10.mp3");
         }else if(User==3){
             ref1 = storageReference.child("Sousanis").child("1.mp3");
-            ref2 = storageReference.child("Sousanis").child("2.mp3");
-            ref3 = storageReference.child("Sousanis").child("3.mp3");
-            ref4 = storageReference.child("Sousanis").child("4.mp3");
-            ref5 = storageReference.child("Sousanis").child("5.mp3");
-            ref6 = storageReference.child("Sousanis").child("6.mp3");
-            ref7 = storageReference.child("Sousanis").child("7.mp3");
-            ref8 = storageReference.child("Sousanis").child("8.mp3");
-            ref9 = storageReference.child("Sousanis").child("9.mp3");
-            ref10 = storageReference.child("Sousanis").child("10.mp3");
+//            ref2 = storageReference.child("Sousanis").child("2.mp3");
+//            ref3 = storageReference.child("Sousanis").child("3.mp3");
+//            ref4 = storageReference.child("Sousanis").child("4.mp3");
+//            ref5 = storageReference.child("Sousanis").child("5.mp3");
+//            ref6 = storageReference.child("Sousanis").child("6.mp3");
+//            ref7 = storageReference.child("Sousanis").child("7.mp3");
+//            ref8 = storageReference.child("Sousanis").child("8.mp3");
+//            ref9 = storageReference.child("Sousanis").child("9.mp3");
+//            ref10 = storageReference.child("Sousanis").child("10.mp3");
         }else if(User==4){
             ref1 = storageReference.child("Guru").child("1.mp3");
-            ref2 = storageReference.child("Guru").child("2.mp3");
-            ref3 = storageReference.child("Guru").child("3.mp3");
-            ref4 = storageReference.child("Guru").child("4.mp3");
-            ref5 = storageReference.child("Guru").child("5.mp3");
-            ref6 = storageReference.child("Guru").child("6.mp3");
-            ref7 = storageReference.child("Guru").child("7.mp3");
-            ref8 = storageReference.child("Guru").child("8.mp3");
-            ref9 = storageReference.child("Guru").child("9.mp3");
-            ref10 = storageReference.child("Guru").child("10.mp3");
+//            ref2 = storageReference.child("Guru").child("2.mp3");
+//            ref3 = storageReference.child("Guru").child("3.mp3");
+//            ref4 = storageReference.child("Guru").child("4.mp3");
+//            ref5 = storageReference.child("Guru").child("5.mp3");
+//            ref6 = storageReference.child("Guru").child("6.mp3");
+//            ref7 = storageReference.child("Guru").child("7.mp3");
+//            ref8 = storageReference.child("Guru").child("8.mp3");
+//            ref9 = storageReference.child("Guru").child("9.mp3");
+//            ref10 = storageReference.child("Guru").child("10.mp3");
         }else if(User==5){
             ref1 = storageReference.child("Moustakas").child("1.mp3");
-            ref2 = storageReference.child("Moustakas").child("2.mp3");
-            ref3 = storageReference.child("Moustakas").child("3.mp3");
-            ref4 = storageReference.child("Moustakas").child("4.mp3");
-            ref5 = storageReference.child("Moustakas").child("5.mp3");
-            ref6 = storageReference.child("Moustakas").child("6.mp3");
-            ref7 = storageReference.child("Moustakas").child("7.mp3");
-            ref8 = storageReference.child("Moustakas").child("8.mp3");
-            ref9 = storageReference.child("Moustakas").child("9.mp3");
-            ref10 = storageReference.child("Moustakas").child("10.mp3");
+//            ref2 = storageReference.child("Moustakas").child("2.mp3");
+//            ref3 = storageReference.child("Moustakas").child("3.mp3");
+//            ref4 = storageReference.child("Moustakas").child("4.mp3");
+//            ref5 = storageReference.child("Moustakas").child("5.mp3");
+//            ref6 = storageReference.child("Moustakas").child("6.mp3");
+//            ref7 = storageReference.child("Moustakas").child("7.mp3");
+//            ref8 = storageReference.child("Moustakas").child("8.mp3");
+//            ref9 = storageReference.child("Moustakas").child("9.mp3");
+//            ref10 = storageReference.child("Moustakas").child("10.mp3");
         }else if(User==6){
             ref1 = storageReference.child("Levis").child("1.mp3");
-            ref2 = storageReference.child("Levis").child("2.mp3");
-            ref3 = storageReference.child("Levis").child("3.mp3");
-            ref4 = storageReference.child("Levis").child("4.mp3");
-            ref5 = storageReference.child("Levis").child("5.mp3");
-            ref6 = storageReference.child("Levis").child("6.mp3");
-            ref7 = storageReference.child("Levis").child("7.mp3");
-            ref8 = storageReference.child("Levis").child("8.mp3");
-            ref9 = storageReference.child("Levis").child("9.mp3");
-            ref10 = storageReference.child("Levis").child("10.mp3");
+//            ref2 = storageReference.child("Levis").child("2.mp3");
+//            ref3 = storageReference.child("Levis").child("3.mp3");
+//            ref4 = storageReference.child("Levis").child("4.mp3");
+//            ref5 = storageReference.child("Levis").child("5.mp3");
+//            ref6 = storageReference.child("Levis").child("6.mp3");
+//            ref7 = storageReference.child("Levis").child("7.mp3");
+//            ref8 = storageReference.child("Levis").child("8.mp3");
+//            ref9 = storageReference.child("Levis").child("9.mp3");
+//            ref10 = storageReference.child("Levis").child("10.mp3");
         }else if(User==7){
             ref1 = storageReference.child("Dady").child("1.mp3");
-            ref2 = storageReference.child("Dady").child("2.mp3");
-            ref3 = storageReference.child("Dady").child("3.mp3");
-            ref4 = storageReference.child("Dady").child("4.mp3");
-            ref5 = storageReference.child("Dady").child("5.mp3");
-            ref6 = storageReference.child("Dady").child("6.mp3");
-            ref7 = storageReference.child("Dady").child("7.mp3");
-            ref8 = storageReference.child("Dady").child("8.mp3");
-            ref9 = storageReference.child("Dady").child("9.mp3");
-            ref10 = storageReference.child("Dady").child("10.mp3");
+//            ref2 = storageReference.child("Dady").child("2.mp3");
+//            ref3 = storageReference.child("Dady").child("3.mp3");
+//            ref4 = storageReference.child("Dady").child("4.mp3");
+//            ref5 = storageReference.child("Dady").child("5.mp3");
+//            ref6 = storageReference.child("Dady").child("6.mp3");
+//            ref7 = storageReference.child("Dady").child("7.mp3");
+//            ref8 = storageReference.child("Dady").child("8.mp3");
+//            ref9 = storageReference.child("Dady").child("9.mp3");
+//            ref10 = storageReference.child("Dady").child("10.mp3");
         }else{ref1 = storageReference.child("New_User").child("1.mp3");
-            ref2 = storageReference.child("New_User").child("2.mp3");
-            ref3 = storageReference.child("New_User").child("3.mp3");
-            ref4 = storageReference.child("New_User").child("4.mp3");
-            ref5 = storageReference.child("New_User").child("5.mp3");
-            ref6 = storageReference.child("New_User").child("6.mp3");
-            ref7 = storageReference.child("New_User").child("7.mp3");
-            ref8 = storageReference.child("New_User").child("8.mp3");
-            ref9 = storageReference.child("New_User").child("9.mp3");
-            ref10 = storageReference.child("New_User").child("10.mp3");}
+//            ref2 = storageReference.child("New_User").child("2.mp3");
+//            ref3 = storageReference.child("New_User").child("3.mp3");
+//            ref4 = storageReference.child("New_User").child("4.mp3");
+//            ref5 = storageReference.child("New_User").child("5.mp3");
+//            ref6 = storageReference.child("New_User").child("6.mp3");
+//            ref7 = storageReference.child("New_User").child("7.mp3");
+//            ref8 = storageReference.child("New_User").child("8.mp3");
+//            ref9 = storageReference.child("New_User").child("9.mp3");
+//            ref10 = storageReference.child("New_User").child("10.mp3");
+             }
 
 
         //logika ama thelw ola ta tragoudia tote xwris child
@@ -589,112 +714,112 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ref2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "b2_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-        ref3.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "c3_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        ref4.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "d4_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        ref5.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "e5_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        ref6.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "f6_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        ref7.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "g7_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        ref8.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "h8_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        ref9.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "i9_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
-
-        ref10.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "j10_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });
+//        ref2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "b2_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//        ref3.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "c3_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//
+//        ref4.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "d4_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//
+//        ref5.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "e5_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//
+//        ref6.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "f6_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//
+//        ref7.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "g7_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//
+//        ref8.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "h8_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//
+//        ref9.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "i9_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
+//
+//        ref10.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//            @Override
+//            public void onSuccess(Uri uri) {
+//                String url=uri.toString();
+//                downloadFile(MainActivity.this, "j10_run", ".mp3",DIRECTORY_DOWNLOADS,url);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//            }
+//        });
 
 
     }
@@ -708,6 +833,8 @@ public class MainActivity extends AppCompatActivity {
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalFilesDir(context, destinationDirectory, fileName + fileExtension);
+
+
 
         downloadManager.enqueue(request);
 
@@ -807,11 +934,12 @@ public class MainActivity extends AppCompatActivity {
         String Accuracy = String.valueOf(location.getAccuracy());
         String Speed = String.valueOf(location.getSpeed());
         FileOutputStream foss = null;
-        Update_pointer += 1;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 
-        Table_Data_1.clear();
-        Table_Data_1.add("User: "+User+ "Enhmerwsh no:"+ Update_pointer + " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime);
+        Run_Data.clear();
+        if (!(start % 2 == 0)){Run_Data.add("He push the Play Button------------------------------------------------"+" Time: "+ currentTime +" Date "+LocalDate.now());start=start+1;}
+
+        Run_Data.add("User: "+User+ " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
 
 
 
@@ -826,8 +954,8 @@ public class MainActivity extends AppCompatActivity {
             FILE_DATA = LocalDate.now().toString()+"Data.txt";
             foss = openFileOutput(FILE_DATA, MODE_APPEND);
 
-                      for (int i=0; i< Table_Data_1.size(); i++)
-                      foss.write(((Table_Data_1.get(i)+"\n").getBytes()));
+                      for (int i=0; i< Run_Data.size(); i++)
+                      foss.write(((Run_Data.get(i)+"\n").getBytes()));
             //foss.write((Table.get(Update_pointer).getBytes()));
             //}
             //else {
@@ -867,9 +995,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
     public void uploadList(View v){
-        myList.add("New Button Data");
-        myList.add(Table_Data_1.toString());
+        //myList.add("New Button Data");
+        myList.add(Run_Data.toString());
 
         //gia na steileis
         //ArrayList<String> Recent = new ArrayList<>();
@@ -895,7 +1025,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()){
-                        Toast.makeText(getApplicationContext(),"List is uploaded successfully", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"List is uploaded successfully, Dont upload again for today", Toast.LENGTH_LONG).show();
                     }
 
                 }
@@ -939,7 +1069,16 @@ public class MainActivity extends AppCompatActivity {
     //Gia Imerisio----------------------------------------------------------------------------------
     private void  prepareMediaPlayer(){
         try {
-            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/diaskelismos.mp3?alt=media&token=dd92309d-4ee9-4181-ad67-f77bf34dd0f6");
+                    final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
+                    FileDescriptor fd =null;
+            try {
+                FileInputStream stream = new FileInputStream(mySongs.get(0));
+                fd = stream.getFD();
+            } catch (IOException ex){}
+            mediaPlayer.setDataSource(fd);
+
+            //mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/diaskelismos.mp3?alt=media&token=dd92309d-4ee9-4181-ad67-f77bf34dd0f6");
+
             mediaPlayer.prepare();
             textTotalDuration.setText(milliSecondToTimer(mediaPlayer.getDuration()));
 
@@ -987,6 +1126,44 @@ public class MainActivity extends AppCompatActivity {
 
     }
     //Telso gia Imerisio----------------------------------------------------------------------------
+
+
+
+      //Gia thn allagh tou xrwmatos sto activity
+    private void statusbarcolor()
+    {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+        }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
+        {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+        }
+    }
+
+    //
+      public ArrayList<File> findSong(File file) {
+        ArrayList<File> arrayList = new ArrayList<>();
+
+        File[] files = file.listFiles();
+        try {
+            FileInputStream stream = new FileInputStream(file);
+            FileDescriptor fd = stream.getFD();
+        } catch (IOException ex){}
+
+
+        for (File singlefile : files) {
+            if (singlefile.isDirectory() && !singlefile.isHidden()) {
+                arrayList.addAll(findSong(singlefile));
+            } else
+            {
+                if (singlefile.getName().endsWith("run.mp3") || singlefile.getName().endsWith(".wav")) {
+                    arrayList.add(singlefile);
+                }
+            }
+        }
+        return arrayList;
+    }
 }
+
 
 //// Mouaxaxaxaxa

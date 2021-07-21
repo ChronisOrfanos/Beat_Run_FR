@@ -48,6 +48,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
 
 
+
     Button btn_next;
     private ImageView imagePlayPause, Done_Check;
     private TextView textCurrentTime, textTotalDuration;
@@ -87,6 +88,13 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_skill);
 
+
+
+        //Gia to xrwma tou Activity
+        statusbarcolor();
+        //Telos gia to xrwma tou Actiity
+
+
         btn_next = findViewById(R.id.bnt_next);
         imagePlayPause = findViewById(R.id.imagePlayPause);
         textCurrentTime =  findViewById(R.id.textCurrentTime);
@@ -99,7 +107,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         Intent intent = getIntent();
         String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
         User_Name = Name_Activity_1;
-        //Telos INTENT------------------------------------------------------------------------------
+
 
         //Gia to Firebase---------------------------------------------------------------------------
         myList = new ArrayList<>();
@@ -143,8 +151,8 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
                 intent.putExtra(Share_User_2, User_Name);
 
                 mediaPlayer.stop();
-                startActivity(intent);
                 uploadList(v);
+                startActivity(intent);
             }
         });
 
@@ -290,7 +298,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         FileOutputStream fos = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         Table_Skill.clear();
-        Table_Skill.add(" Number of Steps: "+ stepDetect +" Entrie Date "+ LocalDate.now() +" Time "+currentTime);
+        Table_Skill.add(" Number of Steps: "+ stepDetect +" Time "+currentTime+ " Entrie Date "+ LocalDate.now() );
 
         //Firebase---------------------------------------------------
         rootNode = FirebaseDatabase.getInstance();
@@ -414,7 +422,17 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
     }
     //Telos Synartisewn tou FireBase---------------------------------------------------------------------------------------
-
+  //Gia thn allagh tou xrwmatos sto activity
+    private void statusbarcolor()
+    {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+        }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
+        {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+        }
+    }
+    //
 
 
 

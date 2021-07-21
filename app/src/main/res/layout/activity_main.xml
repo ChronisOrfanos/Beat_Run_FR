@@ -7,6 +7,8 @@
     android:background="#8F8F8F"
     tools:context=".MainActivity">
 
+
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/appCompatImageView"
         android:layout_width="match_parent"
@@ -111,6 +113,11 @@
             android:thumbTint="#00BCD4"
             tools:ignore="MissingConstraints" />
 
+        <com.jjoe64.graphview.GraphView
+        android:layout_width="280dp"
+        android:layout_height="170dp"
+        android:background="@color/cardview_dark_background"
+        android:id="@+id/graph" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
@@ -233,78 +240,6 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"></EditText>
 
-<!--    <TextView-->
-<!--        android:id="@+id/tv_labelsensor"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:text="Sensor:"-->
-<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:textColor="#E8D10B"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/sw_gps" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_sensor"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Cell Tower + Wifi"-->
-<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:textColor="#E8D10B"-->
-<!--        android:textColorHighlight="#FAF1F1"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/tv_labelsensor"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/tv_labelsensor" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_labelupdates"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Updates:"-->
-<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:textColor="#E8D10B"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/sw_locationsupdates" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_updates"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Off"-->
-<!--        android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-<!--        android:textColor="#E8D10B"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/tv_labelupdates"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/tv_labelupdates" />-->
-
-<!--    <Switch-->
-<!--        android:id="@+id/sw_locationsupdates"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:checked="false"-->
-<!--        android:switchTextAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:text="Location Updates"-->
-<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:textColor="#E8D10B"-->
-<!--        android:thumbTint="#00BCD4"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.083"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        tools:ignore="MissingConstraints"-->
-<!--        tools:layout_editor_absoluteY="164dp" />-->
-
-
-<!--    <Switch-->
-<!--        android:id="@+id/sw_gps"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:text="GPS/SavePower"-->
-<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--        android:textColor="#E8D10B"-->
-<!--        app:layout_constraintBottom_toTopOf="@+id/sw_locationsupdates"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.078"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tv_labelupdates" />-->
 
     <Button
         android:id="@+id/btn_save"
@@ -337,6 +272,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <Button
+        android:id="@+id/btn_destroy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button"
+        tools:layout_editor_absoluteX="28dp"
+        tools:layout_editor_absoluteY="658dp" />
 
 
 

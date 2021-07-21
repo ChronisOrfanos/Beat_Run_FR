@@ -131,6 +131,9 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        //Gia to xrwma tou Activity
+        statusbarcolor();
+        //Telos gia to xrwma tou Actiity
 
         //Gia to StepCounter--------------------------------------------------------------------------------------------------------------------------------------
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -229,9 +232,11 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         playerSeekBar.setMax(100);
 
         btn_ready.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 String User_Name = Name_Activity_1;
+                //save(v);
 
                 Intent intent = new Intent(Game_Activity.this, MainActivity.class );
                 intent.putExtra(Share_User_3, User_Name);
@@ -256,7 +261,8 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
                     imagePlayPause.setImageResource(R.drawable.ic_pause_game);
                     updateSeekBar();
                 }
-                save(v);
+                Table_Game.add("------------------The user Play the Start Button--------------------------");
+                //save(v);
             }
 
 
@@ -411,6 +417,15 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     private void updateUIValues(Location location) {
         // update all of the text view objects with a ne Location.
 
+        rootNode = FirebaseDatabase.getInstance();
+        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Game");
+        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Game");
+        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Game");
+        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
+        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
+        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Game");
+        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
+        } else {reference = rootNode.getReference("New_User_Game");}
 
         String Latitude = String.valueOf(location.getLatitude());
         String Longtitude = String.valueOf(location.getLongitude());
@@ -419,9 +434,8 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         String Speed = String.valueOf(location.getSpeed());
         FileOutputStream foss = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        game_count += 1;
-        Table_Game.clear();
-        Table_Game.add("Enhmerwsh no:"+ game_count+ " "+"Number Of steps: "+stepDetect+" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime);
+        //Table_Game.clear();
+        Table_Game.add("Number Of steps: "+stepDetect+" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
         //Table_Game.add("Enhmerwsh no:");
 
 
@@ -467,22 +481,21 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     public void save(View v) {
 
         FileOutputStream fos = null;
-        game_count += 1;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Table_Game.clear();
-        Table_Game.add(" Try no:"+game_count+" Number of Steps: "+ stepDetect+" Entrie Date "+ LocalDate.now() +" Time "+currentTime);
+        //Table_Game.clear();
+        Table_Game.add(" Number of Steps: "+ stepDetect+" Time "+currentTime +" Entrie Date "+ LocalDate.now() );
 
 
         //Firebase---------------------------------------------------
-        rootNode = FirebaseDatabase.getInstance();
-        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Game");
-        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Game");
-        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Game");
-        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
-        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
-        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Game");
-        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
-        } else {reference = rootNode.getReference("New_User_Game");}
+//        rootNode = FirebaseDatabase.getInstance();
+//        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Game");
+//        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Game");
+//        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Game");
+//        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
+//        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
+//        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Game");
+//        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
+//        } else {reference = rootNode.getReference("New_User_Game");}
         //reference = rootNode.getReference("Game");
         //reference.setValue("llll");
 
@@ -633,5 +646,16 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     }
     //Telos Synartisewn tou FireBase---------------------------------------------------------------------------------------
 
+     //Gia thn allagh tou xrwmatos sto activity
+    private void statusbarcolor()
+    {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+        }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
+        {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+        }
+    }
+    //
 
 }

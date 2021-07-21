@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -110,7 +111,7 @@ public class Start_Activity extends AppCompatActivity {
 
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         Infos.clear();
-        Infos.add("Name: "+ Name +" Age: "+ Age +" Weigh: "+ Weigh + " Usual week runs: "+ U_w_runs + " Tests: "+ Tests +" Email: "+ Mail + " Phone: "+ Phone +" Entrie Date "+ LocalDate.now() +" Time "+currentTime);
+        Infos.add("Name: "+ Name +" Age: "+ Age +" Weigh: "+ Weigh + " Usual week runs: "+ U_w_runs + " Tests: "+ Tests +" Email: "+ Mail + " Phone: "+ Phone +" Time "+currentTime+ " Entrie Date "+ LocalDate.now() );
 
 
         // plhrofories hmera
@@ -157,6 +158,13 @@ public class Start_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+
+        //Gia to xrwma tou Activity
+        statusbarcolor();
+        getSupportActionBar().setTitle(Html.fromHtml("<font color=\"yellow\">" + getString(R.string.app_name) + "</font>"));
+        //Telos xrwmatos Activity
+
 
         remember = findViewById(R.id.rememberMe);
         login = findViewById(R.id.loginBtn);
@@ -319,6 +327,17 @@ public class Start_Activity extends AppCompatActivity {
     }
     //Telos Synartisewn tou FireBase---------------------------------------------------------------------------------------
 
+    //Gia thn allagh tou xrwmatos sto activity
+    private void statusbarcolor()
+    {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.teal_200,this.getTheme()));
+        }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
+        {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.teal_200));
+        }
+    }
+    //
 
 
 

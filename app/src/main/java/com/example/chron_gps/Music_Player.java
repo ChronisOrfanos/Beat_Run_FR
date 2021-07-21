@@ -69,38 +69,38 @@ public class Music_Player extends AppCompatActivity {
 
 
 
-
-        // plhrofories hmera
-        try {
-            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
-
-            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
-            fos = openFileOutput(FILE_NAME2, MODE_APPEND);
-            for (int i=0; i< Table_File.size(); i++)
-                fos.write(((Table_File.get(i)+"\n").getBytes()));
-
-
-            //fos.write(text.getBytes());
-
-
-
-
-
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
+//
+////         plhrofories hmera
+//        try {
+//            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
+//
+//            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
+//            fos = openFileOutput(FILE_NAME2, MODE_APPEND);
+//            for (int i=0; i< Table_File.size(); i++)
+//                fos.write(((Table_File.get(i)+"\n").getBytes()));
+//
+//
+//            //fos.write(text.getBytes());
+//
+//
+//
+//
+//
+//            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            if (fos != null){
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        }
     }
 
 
@@ -135,6 +135,11 @@ public class Music_Player extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
+
+
+        //Gia to xrwma tou Activity
+        statusbarcolor();
+        //Telos gia to xrwma tou Actiity
 
         getSupportActionBar().setTitle("Now Playing");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -254,7 +259,7 @@ public class Music_Player extends AppCompatActivity {
                 {
                     btnplay.setBackgroundResource(R.drawable.ic_pause);
                     mediaPlayer.start();
-                    save(v);
+                   // save(v);
                     //Edw na valw ton fakelo
                 }
             }
@@ -375,6 +380,18 @@ public class Music_Player extends AppCompatActivity {
         return time;
 
     }
+
+      //Gia thn allagh tou xrwmatos sto activity
+    private void statusbarcolor()
+    {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+        }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
+        {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+        }
+    }
+    //
 
 
 

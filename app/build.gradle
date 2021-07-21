@@ -67,4 +67,9 @@ dependencies {
 
     //Gia Gif
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
+
+    //Gia to graphview
+    implementation 'com.jjoe64:graphview:4.2.2'
+
+    //
 }

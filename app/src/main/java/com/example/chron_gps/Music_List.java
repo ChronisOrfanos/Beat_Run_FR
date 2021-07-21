@@ -104,6 +104,9 @@ public class Music_List extends AppCompatActivity {
 
         listView = findViewById(R.id.listViewSong);
 
+        //Gia to xrwma tou Activity
+        statusbarcolor();
+        //Telos gia to xrwma tou Actiity
         runtimePermission();
     }
 
@@ -217,4 +220,16 @@ public class Music_List extends AppCompatActivity {
             return myView;
         }
     }
+
+      //Gia thn allagh tou xrwmatos sto activity
+    private void statusbarcolor()
+    {
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+        }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
+        {
+            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+        }
+    }
+    //
 }
