@@ -159,7 +159,7 @@
                 android:layout_marginRight="40dp"
                 android:background="@drawable/edit_txt_1_start"
                 android:fontFamily="@font/roboto_light_start"
-                android:hint="Weigh"
+                android:hint="Weight"
                 android:inputType="textShortMessage"
                 android:paddingLeft="20dp"
                 android:textColorHint="#DADADA" />

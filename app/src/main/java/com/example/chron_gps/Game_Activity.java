@@ -228,7 +228,6 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         playerSeekBar = findViewById(R.id.playerSeekBar);
         mediaPlayer = new MediaPlayer();
         btn_ready = findViewById(R.id.bnt_ready);
-
         playerSeekBar.setMax(100);
 
         btn_ready.setOnClickListener(new View.OnClickListener() {

@@ -219,7 +219,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         if (mediaPlayer.isPlaying()) {
             playerSeekBar.setProgress((int) (((float) mediaPlayer.getCurrentPosition() / mediaPlayer.getDuration()) * 100));
             handler.postDelayed(updater, 1000);
-
         }
     }
 

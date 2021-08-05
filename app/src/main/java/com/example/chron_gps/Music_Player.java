@@ -51,6 +51,8 @@ public class Music_Player extends AppCompatActivity {
     Thread updateseekbar;
 
 
+
+
     // Gia thn prospatheia na anoigei ton fakelo
 
     private static String FILE_NAME2;

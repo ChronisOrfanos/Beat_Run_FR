@@ -138,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
     // references to the UI elements
 
     TextView  tv_sensor, tv_updates;
-    Button btn_save, btn_music, btn_day_muisc,btn_destroy;
+    Button btn_save, btn_music, btn_day_muisc;
     ImageView down_try;
+    ImageView imageStop;
+    ImageView image_uploade;
 
     Switch sw_locationupdates, sw_gps;
 
@@ -462,21 +464,39 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        btn_destroy = findViewById(R.id.btn_destroy);
-        btn_destroy.setOnClickListener(new View.OnClickListener() {
+
+
+        imageStop =  findViewById(R.id.imageStop);
+        imageStop.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-//                finish();   etsi lagarei toulaxiston
-//                onDestroy();
+            public boolean onTouch(View v, MotionEvent event) {
                 onDestroy();
                 finish();
                 Intent intent_arx = new Intent(MainActivity.this, Start_Activity.class );
-                startActivity(intent_arx);
-
-
+//                startActivity(intent_arx);
+                return false;
             }
         });
 
+
+        image_uploade = findViewById(R.id.image_upload);
+        image_uploade.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                rootNode = FirebaseDatabase.getInstance();
+
+                if (User==1){reference =rootNode.getReference("Chronis_Runs");
+                }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
+                }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
+                }else if (User==4){reference =rootNode.getReference("Guru_Runs");
+                }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
+                }else if (User==6){reference = rootNode.getReference("Levis_Runs");
+                }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
+                }else {reference =rootNode.getReference("New_User_Runs");}
+                uploadList(v);
+                return false;
+            }
+        });
 
 
 
@@ -548,7 +568,7 @@ public class MainActivity extends AppCompatActivity {
                     mediaPlayer.start();
                     imagePlayPause.setImageResource(R.drawable.ic_pause_game);
                     updateSeekBar();
-                    save(v);
+                    //save(v);
                 }
                 start=start+1;
 
@@ -928,6 +948,8 @@ public class MainActivity extends AppCompatActivity {
         // update all of the text view objects with a ne Location.
 
 
+
+
         String Latitude = String.valueOf(location.getLatitude());
         String Longtitude = String.valueOf(location.getLongitude());
         String Altitude = String.valueOf(location.getAltitude());
@@ -936,10 +958,12 @@ public class MainActivity extends AppCompatActivity {
         FileOutputStream foss = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
 
-        Run_Data.clear();
+        //Run_Data.clear();
         if (!(start % 2 == 0)){Run_Data.add("He push the Play Button------------------------------------------------"+" Time: "+ currentTime +" Date "+LocalDate.now());start=start+1;}
 
         Run_Data.add("User: "+User+ " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
+
+
 
 
 
@@ -981,6 +1005,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
     }
 
 
@@ -1000,6 +1025,14 @@ public class MainActivity extends AppCompatActivity {
     public void uploadList(View v){
         //myList.add("New Button Data");
         myList.add(Run_Data.toString());
+
+//        int x = Run_Data.size();
+//
+//        Integer y = new Integer(x);
+//        myList.add(y.toString());
+//
+//        for (int i=0; i< Run_Data.size(); i++)
+//            myList.add(Run_Data.get(i).toString());
 
         //gia na steileis
         //ArrayList<String> Recent = new ArrayList<>();

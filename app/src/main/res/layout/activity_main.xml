@@ -8,7 +8,6 @@
     tools:context=".MainActivity">
 
 
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/appCompatImageView"
         android:layout_width="match_parent"
@@ -76,7 +75,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_play_game" />
+            android:src="@drawable/run_play" />
 
 
 
@@ -85,7 +84,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/headphones"
+            android:src="@drawable/list"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView_Music"
             tools:ignore="MissingConstraints" />
@@ -272,13 +271,24 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btn_destroy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        tools:layout_editor_absoluteX="28dp"
-        tools:layout_editor_absoluteY="658dp" />
+
+    <ImageView
+        android:id="@+id/imageStop"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/exit"
+        tools:layout_editor_absoluteY="40dp" />
+
+    <ImageView
+        android:id="@+id/image_upload"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/upload"
+        app:layout_constraintTop_toBottomOf="@+id/imageStop" />
 
 
 
