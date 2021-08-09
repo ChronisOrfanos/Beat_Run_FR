@@ -7,6 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -16,6 +20,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -67,7 +72,7 @@ import java.util.Locale;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
     public static final int DEFAULT_UPDATE_INTERVAL = 5;
     public static final int FAST_UPDATE_INTERVAL = 3;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
@@ -75,7 +80,14 @@ public class MainActivity extends AppCompatActivity {
     private static String FILE_DATA ;
 
 
-
+    //Gia to StepCounter
+    private TextView textViewStepDetector;
+    private SensorManager sensorManager;
+    private Sensor mStepDetector;
+    private boolean  isDetectorSensorPresent;
+    int stepDetect = 0;
+    int metavatiko_stepDetector = 0;
+    // Telos StepCounter
 
 
     //Gia to GraphView--------------------------------------------------------------------------
@@ -177,6 +189,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         //Firebase
         rootNode = FirebaseDatabase.getInstance();
 //
@@ -258,6 +272,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Gia to StepCounter--------------------------------------------------------------------------------------------------------------------------------------
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //textViewStepDetector = findViewById(R.id.textViewStepDetector);
+
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null) {
+            mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+
+        }
+        else{
+            textViewStepDetector.setText("Detector Sensor is not Present");
+            isDetectorSensorPresent = false;
+        }
+
+        metavatiko_stepDetector = stepDetect;
+        // Telos tou StepCounter----------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -337,6 +367,70 @@ public class MainActivity extends AppCompatActivity {
             }
         //Telos gia Backround-----------------------------------------------------------------------
 
+        //Gia ta Errors-----------------------------------------------------------------------------
+        btn_save = findViewById(R.id.btn_save);
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                String text = mEditText.getText().toString();
+                FileOutputStream fos = null;
+                currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+                //Table_Errors_1.clear();
+                Errors_Data.add(" Error: "+ text + " Time: "+ currentTime +" Date "+LocalDate.now());
+
+
+
+
+                //Firebase
+                rootNode = FirebaseDatabase.getInstance();
+
+                if (User==1){reference =rootNode.getReference("Chronis_Errors");
+                }else if (User==2){reference =rootNode.getReference("Xiro_Errors");
+                }else if (User==3){reference =rootNode.getReference("Moustakas_Errors");
+                }else if (User==4){reference =rootNode.getReference("Guru_Errors");
+                }else if (User==5){reference =rootNode.getReference("Sousanis_Errors");
+                }else if (User==6){reference = rootNode.getReference("Levis_Errors");
+                }else if (User==7){reference = rootNode.getReference("Dadys_Errors");
+                }else {reference =rootNode.getReference("New_User_Errors");}
+                uploadErrorList(v);
+
+
+
+
+
+                //
+
+
+
+                // plhrofories hmera
+                try {
+                    FILE_ERROR = LocalDate.now().toString()+"Errors.txt";
+                    fos = openFileOutput(FILE_ERROR, MODE_APPEND);
+                    for (int i=0; i< Errors_Data.size(); i++)
+                        fos.write(((Errors_Data.get(i)+"\n").getBytes()));
+
+
+                    mEditText.getText().clear();
+                    Toast.makeText(MainActivity.this, "Saved to" +getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_LONG).show();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    if (fos != null){
+                        try {
+                            fos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }
+        });
+        //Telos gia ta Errors-----------------------------------------------------------------------
 
         //Gia Imerisio
         imagePlayPause = findViewById(R.id.imagePlayPause);
@@ -957,11 +1051,12 @@ public class MainActivity extends AppCompatActivity {
         String Speed = String.valueOf(location.getSpeed());
         FileOutputStream foss = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+        stepDetect = metavatiko_stepDetector;
 
         //Run_Data.clear();
         if (!(start % 2 == 0)){Run_Data.add("He push the Play Button------------------------------------------------"+" Time: "+ currentTime +" Date "+LocalDate.now());start=start+1;}
 
-        Run_Data.add("User: "+User+ " " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
+        Run_Data.add("User: "+User+ " " + "Num of steps: " + stepDetect +" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
 
 
 
@@ -1068,6 +1163,28 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void uploadErrorList(View v){
+        //myList.add("New Button Data");
+        myList.add(Errors_Data.toString());
+
+        reference.setValue(myList)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getApplicationContext(),"List is uploaded successfully, Don't upload again for today", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+
+                });
+
+
+    }
+
+
+
+
     public void TableUpload(View v)
     {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1102,16 +1219,15 @@ public class MainActivity extends AppCompatActivity {
     //Gia Imerisio----------------------------------------------------------------------------------
     private void  prepareMediaPlayer(){
         try {
-                    final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
-                    FileDescriptor fd =null;
-            try {
-                FileInputStream stream = new FileInputStream(mySongs.get(0));
-                fd = stream.getFD();
-            } catch (IOException ex){}
-            mediaPlayer.setDataSource(fd);
+//                    final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
+//                    FileDescriptor fd =null;
+//            try {
+//                FileInputStream stream = new FileInputStream(mySongs.get(0));
+//                fd = stream.getFD();
+//            } catch (IOException ex){}
+//            mediaPlayer.setDataSource(fd);
 
-            //mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/diaskelismos.mp3?alt=media&token=dd92309d-4ee9-4181-ad67-f77bf34dd0f6");
-
+            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/Skill.mp3?alt=media&token=f04ed603-a5a5-4d97-923c-3e66263a2367");
             mediaPlayer.prepare();
             textTotalDuration.setText(milliSecondToTimer(mediaPlayer.getDuration()));
 
@@ -1196,6 +1312,51 @@ public class MainActivity extends AppCompatActivity {
         }
         return arrayList;
     }
+
+
+    //Gia to StepCounter Sinarthseis----------------------------------------------------------------
+
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        //if (event.sensor == mStepCounter){
+        //stepCount = (int) event.values[0];
+        //textViewStepCounter.setText(String.valueOf(stepCount));
+        //}
+        //else
+        if (event.sensor == mStepDetector){
+            stepDetect = (int) (stepDetect + event.values[0]);
+            //textViewStepDetector.setText(String.valueOf(stepDetect));
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null)
+        //sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null)
+            sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null)
+            sensorManager.unregisterListener(this, mStepDetector);
+    }
+
+
+    //Telos Sinarthsewn gia to StepCounter----------------------------------------------------------
+
+
 }
 
 

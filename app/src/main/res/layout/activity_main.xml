@@ -247,7 +247,6 @@
         android:layout_below="@+id/edit_text"
         android:layout_centerHorizontal="true"
         android:backgroundTint="#E8D10B"
-        android:onClick="save"
         android:text="save error"
         app:layout_constraintBottom_toTopOf="@+id/btn_music"
         app:layout_constraintEnd_toEndOf="parent"
@@ -262,10 +261,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_text"
         android:layout_centerHorizontal="true"
-
         android:backgroundTint="#FF0202"
-        android:onClick="save"
-
         android:text="Music"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
