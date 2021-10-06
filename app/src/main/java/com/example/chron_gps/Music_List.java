@@ -48,49 +48,49 @@ public class Music_List extends AppCompatActivity {
     ArrayList<String> Table_File = new ArrayList<String>();
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void save() {
-
-        FileOutputStream fos = null;
-        Song_number += 1;
-        currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Table_File.add("Song no:"+Song_number+" -------------------------------------------------------" + " Time: "+ currentTime);
-
-
-
-
-        // plhrofories hmera
-        try {
-            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
-
-            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
-            fos = openFileOutput(FILE_NAME2, MODE_APPEND);
-            for (int i=0; i< Table_File.size(); i++)
-                fos.write(((Table_File.get(i)+"\n").getBytes()));
-
-
-
-
-
-
-
-
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void save() {
+//
+//        FileOutputStream fos = null;
+//        Song_number += 1;
+//        currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+//        Table_File.add("Song no:"+Song_number+" -------------------------------------------------------" + " Time: "+ currentTime);
+//
+//
+//
+//
+//        // plhrofories hmera
+//        try {
+//            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
+//
+//            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
+//            fos = openFileOutput(FILE_NAME2, MODE_APPEND);
+//            for (int i=0; i< Table_File.size(); i++)
+//                fos.write(((Table_File.get(i)+"\n").getBytes()));
+//
+//
+//
+//
+//
+//
+//
+//
+//            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            if (fos != null){
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//        }
+//    }
 
 
 
@@ -101,6 +101,9 @@ public class Music_List extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_list);
+
+        getSupportActionBar().hide();
+
 
         listView = findViewById(R.id.listViewSong);
 
@@ -172,7 +175,7 @@ public class Music_List extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
                 String songName = (String) listView.getItemAtPosition(i);
                 //String songName = (String) items.get(i);
-                save();
+//                save();
 
 
 
@@ -225,10 +228,10 @@ public class Music_List extends AppCompatActivity {
     private void statusbarcolor()
     {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.teal_700,this.getTheme()));
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.teal_700));
         }
     }
     //

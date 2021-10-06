@@ -38,7 +38,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
 
@@ -81,6 +80,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
     private Sensor mStepDetector;
     private boolean  isDetectorSensorPresent;
     int stepDetect = 0;
+    int user_class;
     //Telos tou StepCounter---------------------------------------------------------------------------------------------------------------------
 
     @Override
@@ -88,6 +88,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_skill);
 
+        getSupportActionBar().hide();
 
 
         //Gia to xrwma tou Activity
@@ -157,7 +158,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         });
 
         imagePlayPause.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 if (mediaPlayer.isPlaying()) {
@@ -171,8 +171,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
                     updateSeekBar();
                 }
             }
-
-
         });
 
         prepareMediaPlayer();
@@ -210,7 +208,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         @Override
         public void run() {
             updateSeekBar();
-            long currenDuration = mediaPlayer.getDuration();
+            long currenDuration = mediaPlayer.getCurrentPosition();
             textCurrentTime.setText(milliSecondToTimer(currenDuration));
         }
     };
@@ -297,7 +295,9 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         FileOutputStream fos = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         Table_Skill.clear();
-        Table_Skill.add(" Number of Steps: "+ stepDetect +" Time "+currentTime+ " Entrie Date "+ LocalDate.now() );
+        if ((stepDetect>=48) && (stepDetect<=70)){user_class = 1;}
+        else{if (((stepDetect>=40) && (stepDetect<=47)) || ((stepDetect>=71) && (stepDetect<=77))){user_class=2;}else user_class=3;}
+        Table_Skill.add("User Class is "+ user_class + " Number of Steps: "+ stepDetect +" Time "+currentTime+ " Entrie Date "+ LocalDate.now() );
 
         //Firebase---------------------------------------------------
         rootNode = FirebaseDatabase.getInstance();
@@ -306,8 +306,10 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Skills");
         } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Skills");
         } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Skills");
-        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Infos");
-        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
+        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Skills");
+//        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Skills");
+        } else if (User_Name.equals("Panagiwta")||User_Name.equals("Panagiwta ")){reference = rootNode.getReference("Panagiwtas_Skills");
+
         } else {reference = rootNode.getReference("New_User_Skills");}
         //reference = rootNode.getReference("Skills");
         //reference.setValue("llll");
@@ -425,10 +427,10 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
     private void statusbarcolor()
     {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity2,this.getTheme()));
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity));
         }
     }
     //

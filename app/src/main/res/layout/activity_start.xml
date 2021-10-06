@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#242424"
+    android:background="#131313"
     android:orientation="vertical"
     android:weightSum="13"
     tools:context=".MainActivity">
@@ -62,7 +62,7 @@
                 android:layout_marginLeft="37dp"
                 android:fontFamily="@font/roboto_black_start"
                 android:text="Login"
-                android:textColor="#ffffff"
+                android:textColor="#FFFFFF"
                 android:textSize="30sp" />
         </LinearLayout>
         <LinearLayout
@@ -243,7 +243,7 @@
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="0dp"
                 android:text="Remember me"
-                android:textColor="@color/white"
+                android:textColor="#FFFFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_gravity="center"
                 app:layout_constraintHorizontal_bias="0.5"

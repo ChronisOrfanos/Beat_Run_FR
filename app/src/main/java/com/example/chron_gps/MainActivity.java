@@ -1,29 +1,34 @@
 package com.example.chron_gps;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -34,6 +39,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -45,6 +51,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,7 +59,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -67,17 +73,45 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Locale;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener , LocationListener {
     public static final int DEFAULT_UPDATE_INTERVAL = 5;
     public static final int FAST_UPDATE_INTERVAL = 3;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     private static String FILE_ERROR ;
     private static String FILE_DATA ;
+
+
+    //Gia ta text tou xronoy
+    TextView txt_Welcome, txt_Encourage, txt_DayCount, txt_Calories, txt_MaxSpeed, txt_Average_Speed, txt_Runtime;
+    Button btn_xronou;
+    int startProgress;
+    int timeduration;
+    DatabaseReference ref_xronou;
+    //Telos text xronoy
+
+    //Gia to progressBar circle
+    ProgressBar progressBar;
+    TextView text_progress;
+    int p=0;
+    //Telos gia progressBar circle
+
+    //Gia to Refresh
+    SwipeRefreshLayout refreshLayout;
+    Handler h = new Handler();
+    ImageView logo_refresh;
+    //Telos gia to Refresh
+
+    //Gia thn speedcounter
+    float totalSpeed=0;
+    int number_of_speed_mesurements=0;
+    float meanSpeed=0;
+    //Telos gia to Speedcounter
 
 
     //Gia to StepCounter
@@ -123,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     //Gia INTENT---------------------------------------------
-    String User_Name;//auto logika pleon axristo MALLON
+    //String User_Name;//auto logika pleon axristo MALLON
     String userName;
     //String User_Name_tel;
 
@@ -151,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     TextView  tv_sensor, tv_updates;
     Button btn_save, btn_music, btn_day_muisc;
-    ImageView down_try;
+//    ImageView down_try;
     ImageView imageStop;
     ImageView image_uploade;
 
@@ -220,9 +254,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
       }else if (User==4){reference =rootNode.getReference("Guru_Runs");
       }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
       }else if (User==6){reference = rootNode.getReference("Levis_Runs");
-      }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
+//      }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
+      }else if (User==7){reference = rootNode.getReference("Panagiwtas_Runs");
+
+
       }else {reference =rootNode.getReference("New_User_Runs");}
-      uploadList(v);
+      uploadList();
 
 
 
@@ -271,6 +308,123 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //Gia ta text tou xronoy
+        txt_Welcome = findViewById(R.id.txt_Welcome);
+        txt_Encourage = findViewById(R.id.txt_Encourage);
+        txt_DayCount = findViewById(R.id.txt_DayCount);
+        txt_Calories = findViewById(R.id.txt_Calories);
+        txt_MaxSpeed = findViewById(R.id.txt_MaxSpeed);
+        txt_Average_Speed = findViewById(R.id.txt_Average_Speed);
+        txt_Runtime = findViewById(R.id.txt_Runtime);
+        //Telos text xronoy
+
+
+        //Gia to progressBar circle
+        progressBar = findViewById(R.id.progress_bar);
+        text_progress = findViewById(R.id.text_progress_bar);
+
+
+        if(startProgress==1){
+            final Handler hand = new Handler();
+            hand.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (p<=100){
+                        text_progress.setText(p+"%");
+                        progressBar.setProgress(p);
+                        p++;
+                        hand.postDelayed(this,200);
+                    }
+                    else hand.removeCallbacks(this);
+
+                }
+            },200);
+        }
+
+
+        //Telos gia progressBar circle
+
+
+        //Navigator Bar
+        BottomNavigationView bottomNavigationView = findViewById(R.id.navigator);
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()){
+                    case R.id.nav_music:{
+                        openMusic_List();}
+
+                }
+
+                switch (menuItem.getItemId()){
+                    case R.id.nav_daily:{
+                        download(userName);}
+                }
+
+                switch (menuItem.getItemId()){
+                    case R.id.nav_upload:{rootNode = FirebaseDatabase.getInstance();
+
+                        if (User==1){reference =rootNode.getReference("Chronis_Runs");
+                        }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
+                        }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
+                        }else if (User==4){reference =rootNode.getReference("Guru_Runs");
+                        }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
+                        }else if (User==6){reference = rootNode.getReference("Levis_Runs");
+//                }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
+                        }else if (User==7){reference = rootNode.getReference("Panagiwtas_Runs");
+
+                        }else {reference =rootNode.getReference("New_User_Errors");}
+                        uploadList();}
+                }
+
+                switch (menuItem.getItemId()){
+                    case R.id.nav_close:
+                        onDestroy();
+                        finish();
+                        Intent intent_arx = new Intent(MainActivity.this, Start_Activity.class );
+                }
+
+                return false;
+            }
+        });
+
+        //Telos Navigator
+
+        //Gia to Refresh
+        logo_refresh =  findViewById(R.id.logo_refresh);
+        refreshLayout = findViewById(R.id.refreshlayout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                logo_refresh.setVisibility(View.VISIBLE);
+                startAnimation(logo_refresh);
+                prepareMediaPlayer();
+                refreshLayout.setRefreshing(true);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        refreshLayout.setRefreshing(false);
+                        logo_refresh.setVisibility(View.INVISIBLE);
+
+                    }
+                },3000);
+            }
+
+        });
+        //Telos gia to Refresh
+
+        //Gia to ActionBar
+        getSupportActionBar().hide();
+        //Telos Action Bar
+
+
 
         //Gia to StepCounter--------------------------------------------------------------------------------------------------------------------------------------
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -339,7 +493,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //        Graph_Points_x.add(4);
 
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        //GraphView graph = (GraphView) findViewById(R.id.graph);
         series = new LineGraphSeries<DataPoint>();
         for (int i = 0; i<10; i++){
             x = x + 3;
@@ -349,7 +503,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            y = Graph_Points_y.get(i);
             series.appendData(new DataPoint(x,y), true, 400);
         }
-        graph.addSeries(series);
+        //graph.addSeries(series);
 
 
         // Telos tou GraphView----------------------------------------------------------------------
@@ -391,7 +545,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }else if (User==4){reference =rootNode.getReference("Guru_Errors");
                 }else if (User==5){reference =rootNode.getReference("Sousanis_Errors");
                 }else if (User==6){reference = rootNode.getReference("Levis_Errors");
-                }else if (User==7){reference = rootNode.getReference("Dadys_Errors");
+//                }else if (User==7){reference = rootNode.getReference("Dadys_Errors");
+                }else if (User==7){reference = rootNode.getReference("Panagiwtas_Errors");
+
                 }else {reference =rootNode.getReference("New_User_Errors");}
                 uploadErrorList(v);
 
@@ -442,14 +598,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Telos gia Imerisio
 
         //Gia FireBase Download---------------------------------------------------------------------
-        down_try =  findViewById(R.id.down_try);
-        down_try.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                download(userName);
-                return false;
-            }
-        });
+//        down_try =  findViewById(R.id.down_try);
+//        down_try.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                download(userName);
+//                return false;
+//            }
+//        });
         //Telos FireBase Download-------------------------------------------------------------------
 
         //Gia thn koumpara---------------------------------------
@@ -460,6 +616,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v) { showToast("Τρέχα μωρή χοντρή");
             //userName = "Chronis";
                 User=1;
+                ref_xronou = FirebaseDatabase.getInstance().getReference().child("Chronis");
+                details();
+
+
             }
         });
 
@@ -499,10 +659,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 User=6;
             }
         });
-        FloatingActionButton fab7 = findViewById(R.id.fab_action7);
+//        FloatingActionButton fab7 = findViewById(R.id.fab_action7);
+//        fab7.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) { showToast("Τρέχα γέρο");
+//                User=7;
+//            }
+//        });
+         FloatingActionButton fab7 = findViewById(R.id.fab_action7);
         fab7.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { showToast("Τρέχα γέρο");
+            public void onClick(View v) { showToast("Ευχαριστώ ρε Παναγιωτάρααα <3 ");
                 User=7;
             }
         });
@@ -514,6 +681,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+
         // Telos koumparas---------------------------------------
 
 
@@ -522,7 +690,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Gia to INTENT-----------------------------------------------------------------------------
         Intent intent = getIntent();
         String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
-        User_Name = Name_Activity_1;
+        //User_Name = Name_Activity_1;
 
 
 
@@ -542,15 +710,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //gia thn mousikh---
 
-        btn_music = findViewById(R.id.btn_music);
-        btn_music.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMusic_List();
-
-
-            }
-        });
+//        btn_music = findViewById(R.id.btn_music);
+//        btn_music.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openMusic_List();
+//
+//
+//            }
+//        });
         //Telos gia mousikh
 
 
@@ -560,49 +728,46 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-        imageStop =  findViewById(R.id.imageStop);
-        imageStop.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                onDestroy();
-                finish();
-                Intent intent_arx = new Intent(MainActivity.this, Start_Activity.class );
-//                startActivity(intent_arx);
-                return false;
-            }
-        });
+//        imageStop =  findViewById(R.id.imageStop);
+//        imageStop.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                onDestroy();
+//                finish();
+//                Intent intent_arx = new Intent(MainActivity.this, Start_Activity.class );
+////                startActivity(intent_arx);
+//                return false;
+//            }
+//        });
 
 
-        image_uploade = findViewById(R.id.image_upload);
-        image_uploade.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                rootNode = FirebaseDatabase.getInstance();
-
-                if (User==1){reference =rootNode.getReference("Chronis_Runs");
-                }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
-                }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
-                }else if (User==4){reference =rootNode.getReference("Guru_Runs");
-                }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
-                }else if (User==6){reference = rootNode.getReference("Levis_Runs");
-                }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
-                }else {reference =rootNode.getReference("New_User_Runs");}
-                uploadList(v);
-                return false;
-            }
-        });
+//        image_uploade = findViewById(R.id.image_upload);
+//        image_uploade.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                rootNode = FirebaseDatabase.getInstance();
+//
+//                if (User==1){reference =rootNode.getReference("Chronis_Runs");
+//                }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
+//                }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
+//                }else if (User==4){reference =rootNode.getReference("Guru_Runs");
+//                }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
+//                }else if (User==6){reference = rootNode.getReference("Levis_Runs");
+////                }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
+//                }else if (User==7){reference = rootNode.getReference("Panagiwtas_Runs");
+//
+//                }else {reference =rootNode.getReference("New_User_Errors");}
+//                uploadList();
+//                return false;
+//            }
+//        });
 
 
 
         //gia to grapsimo sthn othonh
         mEditText = findViewById(R.id.edit_text);
 
-        // give each UI variable a value
 
-
-        //tv_sensor = findViewById(R.id.tv_sensor);
-        //tv_updates = findViewById(R.id.tv_updates);
-        //sw_gps = findViewById(R.id.sw_gps);
         sw_locationupdates = findViewById(R.id.sw_locationsupdates);
 
         locationRequest = new LocationRequest();
@@ -653,6 +818,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
 
+
+
+
             public void onClick(View v) {
                 if (mediaPlayer.isPlaying()) {
                     handler.removeCallbacks(updater);
@@ -662,9 +830,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     mediaPlayer.start();
                     imagePlayPause.setImageResource(R.drawable.ic_pause_game);
                     updateSeekBar();
+                    totalSpeed = 0;
+                    number_of_speed_mesurements = 0;
                     //save(v);
                 }
                 start=start+1;
+
+                //Gia to ProgressCircle
+                if(startProgress==1){
+                    final Handler hand = new Handler();
+                    hand.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            if (p<=timeduration){
+                                text_progress.setText(p+"%");
+                                progressBar.setProgress(p);
+                                p++;
+                                hand.postDelayed(this,1000);
+                            }
+                            else hand.removeCallbacks(this);
+
+                        }
+                    },1000);
+                }
+
+                //Telso gia ProgressCircle
+
+
 
 
             }
@@ -691,7 +884,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         //Telos gia Imerisio------------------------------------------------------------------------
 
+
+        //Gia to Speedtometer to kainourio------------------------------------------------------------------------------------------------------------------
+
+        // Get GPS permisions
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1000);
+        } else {
+            //Start the program if permission is grante
+
+            doStuff();
+        }
+
+        this.updateSpeed(null);
+        //Telos toy kainouriou Speedtometer-----------------------------------------------------------------------------------------------------------------
+
     }// end onCreate method++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
 
 
     //Gia thn koumpara---------------------------------------
@@ -776,7 +986,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            ref9 = storageReference.child("Levis").child("9.mp3");
 //            ref10 = storageReference.child("Levis").child("10.mp3");
         }else if(User==7){
-            ref1 = storageReference.child("Dady").child("1.mp3");
+//            ref1 = storageReference.child("Dady").child("1.mp3");
+            ref1 = storageReference.child("Panagiwta").child("1.mp3");
+
 //            ref2 = storageReference.child("Dady").child("2.mp3");
 //            ref3 = storageReference.child("Dady").child("3.mp3");
 //            ref4 = storageReference.child("Dady").child("4.mp3");
@@ -786,7 +998,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            ref8 = storageReference.child("Dady").child("8.mp3");
 //            ref9 = storageReference.child("Dady").child("9.mp3");
 //            ref10 = storageReference.child("Dady").child("10.mp3");
-        }else{ref1 = storageReference.child("New_User").child("1.mp3");
+
+        }else if(User==8){ref1 = storageReference.child("New_User").child("1.mp3");
 //            ref2 = storageReference.child("New_User").child("2.mp3");
 //            ref3 = storageReference.child("New_User").child("3.mp3");
 //            ref4 = storageReference.child("New_User").child("4.mp3");
@@ -796,7 +1009,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 //            ref8 = storageReference.child("New_User").child("8.mp3");
 //            ref9 = storageReference.child("New_User").child("9.mp3");
 //            ref10 = storageReference.child("New_User").child("10.mp3");
-             }
+             }else {  showToast("You have to choose User");}
 
 
         //logika ama thelw ola ta tragoudia tote xwris child
@@ -816,6 +1029,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //.child("Chron")
                 //.child("08 - Big Bottles feat. Jelly Roll.mp3");
 
+        if (User==1||User==2||User==3||User==4||User==5||User==6||User==7||User==8){
         ref1.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -826,7 +1040,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onFailure(@NonNull Exception e) {
             }
-        });
+        });} else showToast("You have to choose User");
 
 //        ref2.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
 //            @Override
@@ -993,6 +1207,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             case PERMISSIONS_FINE_LOCATION:
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 updateGPS();
+                doStuff();
             }
             else {
                 Toast.makeText(this, "This app requires permission to be granted in order to work properly", Toast.LENGTH_SHORT).show();
@@ -1053,10 +1268,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         stepDetect = metavatiko_stepDetector;
 
+        totalSpeed = (float) (totalSpeed + (location.getSpeed()*3.6));
+        number_of_speed_mesurements = number_of_speed_mesurements +1;
+        if (number_of_speed_mesurements==0){
+            meanSpeed = totalSpeed;
+        }else
+        {meanSpeed = totalSpeed/number_of_speed_mesurements;
+        }
+
+
         //Run_Data.clear();
         if (!(start % 2 == 0)){Run_Data.add("He push the Play Button------------------------------------------------"+" Time: "+ currentTime +" Date "+LocalDate.now());start=start+1;}
 
-        Run_Data.add("User: "+User+ " " + "Num of steps: " + stepDetect +" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
+        Run_Data.add("User: "+User+ " " + "Num of steps: " + stepDetect +" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ "totalSpeed:"+ totalSpeed+ " "+"meanSpeed:"+meanSpeed+ " "+"number_of_speed_mesurements:"+ " "+number_of_speed_mesurements+ " Time: "+ currentTime +" Date "+LocalDate.now());
 
 
 
@@ -1084,7 +1308,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //}
 
 
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_DATA, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_DATA, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -1117,7 +1341,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-    public void uploadList(View v){
+    public void uploadList(){
         //myList.add("New Button Data");
         myList.add(Run_Data.toString());
 
@@ -1147,8 +1371,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             //}
         //});
 
-
-        reference.setValue(myList)
+        if (User==1||User==2||User==3||User==4||User==5||User==6||User==7||User==8){
+            reference.setValue(myList)
             .addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -1159,6 +1383,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
 
         });
+
+        }else showToast("You have to choose User");
+
+
 
 
     }
@@ -1204,7 +1432,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     {
                         stringBuilder.append(TableList.get(i) + ",");
                     }
-                    Toast.makeText(getApplicationContext(), stringBuilder.toString(),Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), stringBuilder.toString(),Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -1219,15 +1447,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     //Gia Imerisio----------------------------------------------------------------------------------
     private void  prepareMediaPlayer(){
         try {
-//                    final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
-//                    FileDescriptor fd =null;
-//            try {
-//                FileInputStream stream = new FileInputStream(mySongs.get(0));
-//                fd = stream.getFD();
-//            } catch (IOException ex){}
-//            mediaPlayer.setDataSource(fd);
+                    final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
+                    FileDescriptor fd =null;
+            try {
+                FileInputStream stream = new FileInputStream(mySongs.get(0));
+                fd = stream.getFD();
+            } catch (IOException ex){}
+            mediaPlayer.setDataSource(fd);
 
-            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/Skill.mp3?alt=media&token=f04ed603-a5a5-4d97-923c-3e66263a2367");
+//            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/Skill.mp3?alt=media&token=f04ed603-a5a5-4d97-923c-3e66263a2367");
             mediaPlayer.prepare();
             textTotalDuration.setText(milliSecondToTimer(mediaPlayer.getDuration()));
 
@@ -1240,7 +1468,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         @Override
         public void run() {
             updateSeekBar();
-            long currenDuration = mediaPlayer.getDuration();
+            long currenDuration = mediaPlayer.getCurrentPosition();
             textCurrentTime.setText(milliSecondToTimer(currenDuration));
         }
     };
@@ -1282,10 +1510,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private void statusbarcolor()
     {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.half_black,this.getTheme()));
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.half_black));
         }
     }
 
@@ -1352,9 +1580,131 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null)
             sensorManager.unregisterListener(this, mStepDetector);
     }
-
-
     //Telos Sinarthsewn gia to StepCounter----------------------------------------------------------
+
+
+
+    //Gia to Speedtometer to kainourio-------------------------------------------------------------------------------------------------------------
+
+
+    @Override
+    public void onLocationChanged(@NonNull Location locatioN) {
+        if (locatioN != null) {
+            CLocation myLocation = new CLocation(locatioN);
+            this.updateSpeed(myLocation);
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+
+    }
+
+    private void doStuff() {
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+        Toast.makeText(this, "Waiting for GPS connection!", Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void updateSpeed(CLocation locatioN){
+        float nCurrentSpeed = 0;
+
+        if (locatioN!= null){
+            nCurrentSpeed = locatioN.getSpeed();
+        }
+
+        Formatter fmt = new Formatter(new StringBuilder());
+        fmt.format(Locale.US,"%5.1f",nCurrentSpeed);
+        String strCurrentSpeed = fmt.toString();
+        strCurrentSpeed = strCurrentSpeed.replace("","0");
+
+
+
+    }
+
+    //Gia logo turning
+    public void startAnimation(View view)
+    {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(logo_refresh, "rotation", 0f, 360f);
+        animator.setDuration(3000);
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(animator);
+        animatorSet.start();
+
+    }
+    //Telos gia logo turning
+
+
+    //Sinartish gia na pairnei ta dedomena taxythtas, thermidwn klp apo ton kathena
+    public void details()
+    {
+        ref_xronou.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String welcome = dataSnapshot.child("Welcome_User").getValue().toString();
+                String encourage = dataSnapshot.child("Encourage_message").getValue().toString();
+                String daycount = dataSnapshot.child("Day_Count").getValue().toString();
+                String calories = dataSnapshot.child("Calories").getValue().toString();
+                String maxspeed = dataSnapshot.child("Max_Speed").getValue().toString();
+                String averagespeed = dataSnapshot.child("Average speed").getValue().toString();
+                String runtime = dataSnapshot.child("Runtime").getValue().toString();
+                String timedurationstring = dataSnapshot.child("Song_time").getValue().toString();
+
+                txt_Welcome.setText(welcome);
+                txt_Encourage.setText(encourage);
+                txt_DayCount.setText(daycount);
+                txt_Calories.setText(calories);
+                txt_MaxSpeed.setText(maxspeed);
+                txt_Average_Speed.setText(averagespeed);
+                txt_Runtime.setText(runtime);
+                startProgress=1;
+                timeduration = Integer.parseInt(timedurationstring);
+
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError dataError) {
+
+            }
+        });
+
+    }
+    //
+
+
+
+
+
+
+
+    //Telos tou kainouriou Speedometer-------------------------------------------------------------------------------------------------------------
+
+
 
 
 }

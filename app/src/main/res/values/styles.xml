@@ -4,7 +4,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent = "Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#CDFF00</item>
+        <item name="colorPrimary">#E91E63</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/av_yellow</item>
    </style>
@@ -15,11 +15,32 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="custom_fab_ch">
+        <!--        <item name="android:background">@color/av_dark_blue</item>&ndash;&gt;-->
+
+        <item name="android:previewImage">@drawable/chr_songs</item>
+        <item name="android:src">@drawable/chr_songs</item>
+    </style>
+
+    <style name="video" parent="Theme.AppCompat.NoActionBar">
+        <!--        <item name="android:background">@color/av_dark_blue</item>&ndash;&gt;-->
+        <item name="android:windowNoTitle">true</item>
+        <item name="colorPrimary">#000000</item>
+
+        <item name="colorPrimaryDark">@color/app_icon_2_background</item>
+
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
 <!--    <style name="AppTheme" parent="Theme.AppCompat.Light">-->
 <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
 <!--        <item name="colorPrimaryDark">@color/half_black</item>-->
 <!--        <item name="colorAccent">@color/teal_700</item>-->
 <!--    </style>-->
+
+
+
+
 
 
 </resources>

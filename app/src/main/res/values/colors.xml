@@ -7,15 +7,44 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
 
+    <color name="second_activity2">#505662</color>
+    <color name="second_activity">#3BADEA</color>
+
+    <color name="main_text">#242325</color>
+
+
+    <color name="first_activity2">#131313</color>
+    <color name="list_activity">#10EAD5</color>
+
+    <color name="welcome_activity">#A8808080</color>
+    <color name="welcome_activity1">#000000</color>
+
+    <color name="navigator">#534D4D</color>
+
+
+
+    <color name="first_activity">#ED000000</color>
     <color name="colorPrimary">#808080</color>
+    <color name="blue_electric">#4302AC</color>
+    <color name="perpul_electric">#F8980D86</color>
+    <color name="music_player">#F5151313</color>
+    <color name="music_player2">#202020</color>
+
+
+
+
 
 
     //Gia thn koumpara
     <color name="black_semi_transparent">#B2000000</color>
     <color name="backround">#e5e5e5</color>
-    <color name="half_black">#808080</color>
+    <color name="half_black">#A8808080</color>
+    <color name="half_black1">#000000</color>
+
     <color name="white">#fafafa</color>
-    <color name="white_pressed">#f1f1f1</color>
+    <color name="white1">#fafafa</color>
+
+    <color name="white_pressed">#FFFFFFFF</color>
     <color name="pink">#e91e63</color>
     <color name="pink_pressed">#ec407a</color>
     <color name="blue_semi_transparent">#805677fc</color>

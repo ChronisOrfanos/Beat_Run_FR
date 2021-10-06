@@ -8,133 +8,106 @@
     tools:context=".MainActivity">
 
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/appCompatImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/old_man_run"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
-
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        style="@style/custom_fab"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshlayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"
-        app:fab_addButtonColorNormal="@color/pink"
-        app:fab_addButtonColorPressed="@color/pink_pressed"
-        app:fab_addButtonPlusIconColor="@color/av_dark_blue"
-        app:fab_expandDirection="down"
+        tools:ignore="MissingConstraints"
+        tools:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!--        <ImageView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:scaleType="centerCrop"-->
+        <!--            android:src="@drawable/old_man_run"-->
+        <!--            tools:ignore="MissingConstraints">-->
+
+        <!--        </ImageView>-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/yo"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/black" />
+
+            <ImageView
+                android:id="@+id/yoko"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/yo"
+                android:layout_alignParentBottom="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/old_man_run"
+                tools:ignore="MissingConstraints"></ImageView>
+
+
+
+
+
+
+
+
+
+
+
+            <RelativeLayout
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_marginTop="300dp">
+
+
+
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <ImageView
+        android:id="@+id/logo_refresh"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/imagePlayPause"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="40dp"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="0dp"
-            android:orientation="horizontal">
+    </ImageView>
 
 
-
-            <TextView
-                android:id="@+id/textCurrentTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0:00"
-                android:textColor="#212121"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <SeekBar
-                android:id="@+id/playerSeekBar"
-                android:layout_width="200dp"
-                android:layout_height="20dp"
-                android:layout_marginBottom="0dp"
-                />
-
-            <TextView
-                android:id="@+id/textTotalDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0:00"
-                android:textColor="#212121"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-
-        <ImageView
-            android:id="@+id/imagePlayPause"
-            android:layout_width="80dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/run_play" />
-
-
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/down_try"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/list"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView_Music"
-            tools:ignore="MissingConstraints" />
-
-        <TextView
-            android:id="@+id/explenation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Run with the beat "
-            android:textColor="@color/white_pressed"
-            android:textSize="10sp"
-            android:textStyle="italic"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
-
-        <Switch
-            android:id="@+id/sw_locationsupdates"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="Location Updates"
-            android:textColor="#E8D10B"
-            android:textSize="10sp"
-            android:thumbTint="#00BCD4"
-            tools:ignore="MissingConstraints" />
-
-        <com.jjoe64.graphview.GraphView
-        android:layout_width="280dp"
-        android:layout_height="170dp"
-        android:background="@color/cardview_dark_background"
-        android:id="@+id/graph" />
-
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-
-
+    <!--        <com.jjoe64.graphview.GraphView-->
+    <!--            android:id="@+id/graph"-->
+    <!--            android:layout_width="280dp"-->
+    <!--            android:layout_height="170dp"-->
+    <!--            android:background="@color/cardview_dark_background" />-->
 
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/float_users"
         android:layout_width="60dp"
         android:layout_height="20dp"
         app:fab_addButtonColorNormal="@color/pink"
         app:fab_addButtonColorPressed="@color/pink_pressed"
-        app:fab_addButtonPlusIconColor="@color/av_dark_blue"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:fab_addButtonPlusIconColor="@color/black"
+        app:fab_addButtonSize="mini"
+        app:fab_addButtonStrokeVisible="false"
         app:fab_expandDirection="down"
         app:fab_labelStyle="@style/custom_fab"
+        app:layout_constraintEnd_toEndOf="parent"
         tools:ignore="MissingConstraints">
-
 
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -151,10 +124,10 @@
             android:id="@+id/fab_action2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_colorNormal="@color/cardview_dark_background"
             app:fab_colorPressed="@color/av_yellow"
             app:fab_icon="@drawable/xiro"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_size="mini"
             app:fab_title="Xiro" />
 
@@ -162,60 +135,65 @@
             android:id="@+id/fab_action3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_colorNormal="@color/cardview_dark_background"
             app:fab_colorPressed="@color/av_yellow"
             app:fab_icon="@drawable/moustakas"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_size="mini"
             app:fab_title="Moustakas" />
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_colorNormal="@color/cardview_dark_background"
             app:fab_colorPressed="@color/av_yellow"
             app:fab_icon="@drawable/guru"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_size="mini"
             app:fab_title="Guru" />
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_colorNormal="@color/cardview_dark_background"
             app:fab_colorPressed="@color/av_yellow"
             app:fab_icon="@drawable/sous"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_size="mini"
             app:fab_title="Sousanis" />
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_colorNormal="@color/cardview_dark_background"
             app:fab_colorPressed="@color/av_yellow"
             app:fab_icon="@drawable/levis"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_size="mini"
             app:fab_title="Levis" />
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_colorNormal="@color/cardview_dark_background"
             app:fab_colorPressed="@color/av_yellow"
-            app:fab_icon="@drawable/dady"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
+            app:fab_icon="@drawable/panagiwta"
             app:fab_size="mini"
-            app:fab_title="Dady" />
+            app:fab_title="Panagiwta" />
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_colorNormal="@color/cardview_dark_background"
             app:fab_colorPressed="@color/av_yellow"
             app:fab_icon="@drawable/newuser"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
             app:fab_size="mini"
             app:fab_title="NewUser" />
 
@@ -223,21 +201,23 @@
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
 
-
-
-
+    <ImageView
+        android:id="@+id/image_Users_float"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/chr_user_elpzw"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:foregroundTint="#FFEB3B"
         android:textColor="#FFFFFF"
-        app:layout_constraintBottom_toTopOf="@+id/btn_save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"></EditText>
+        app:layout_constraintBottom_toBottomOf="@+id/btn_save"
+        app:layout_constraintStart_toEndOf="@+id/btn_save"
+        tools:ignore="MissingConstraints"></EditText>
 
 
     <Button
@@ -248,45 +228,193 @@
         android:layout_centerHorizontal="true"
         android:backgroundTint="#E8D10B"
         android:text="save error"
-        app:layout_constraintBottom_toTopOf="@+id/btn_music"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" />
 
     >
 
-    <Button
-        android:id="@+id/btn_music"
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigator"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:background="@color/navigator"
+        android:outlineAmbientShadowColor="@color/white"
+        android:outlineSpotShadowColor="@color/white"
+        app:itemTextColor="@color/teal_200"
+        app:menu="@menu/navigetion_item"
+        tools:ignore="MissingConstraints" />
+
+    <Switch
+        android:id="@+id/sw_locationsupdates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/edit_text"
-        android:layout_centerHorizontal="true"
-        android:backgroundTint="#FF0202"
-        android:text="Music"
+        android:layout_alignParentEnd="true"
+        android:checked="false"
+        android:text="Location Updates"
+        android:textColor="#E8D10B"
+        android:textSize="13sp"
+        android:thumbTint="#00BCD4"
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <SeekBar
+        android:id="@+id/playerSeekBar"
+        android:layout_width="200dp"
+        android:layout_height="20dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/textCurrentTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        android:textColor="#212121"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/playerSeekBar"
+        app:layout_constraintTop_toTopOf="@+id/playerSeekBar" />
+
+    <TextView
+        android:id="@+id/textTotalDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0:00"
+        android:textColor="#212121"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/playerSeekBar"
+        app:layout_constraintTop_toTopOf="@+id/playerSeekBar" />
 
     <ImageView
-        android:id="@+id/imageStop"
+        android:id="@+id/imagePlayPause"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/chr_play3333"
+        app:layout_constraintBottom_toTopOf="@+id/playerSeekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@drawable/circle_shape"
+        android:indeterminate="false"
+        android:indeterminateDrawable="@drawable/progress_bar"
+        android:progress="50"
+        android:progressDrawable="@drawable/progress_bar"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="@+id/logo_refresh"
+        app:layout_constraintEnd_toEndOf="@+id/logo_refresh"
+        app:layout_constraintStart_toStartOf="@+id/logo_refresh"
+        app:layout_constraintTop_toTopOf="@+id/logo_refresh" />
+
+    <TextView
+        android:id="@+id/text_progress_bar"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:layout_alignEnd="@+id/progress_bar"
+        android:layout_alignBottom="@+id/progress_bar"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="___"
+        android:textColor="#E1D2D2"
+        android:textSize="20dp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="@+id/logo_refresh"
+        app:layout_constraintEnd_toEndOf="@+id/logo_refresh"
+        app:layout_constraintStart_toStartOf="@+id/logo_refresh"
+        app:layout_constraintTop_toTopOf="@+id/logo_refresh" />
+
+    <TextView
+        android:id="@+id/txt_Welcome"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="23dp"
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_DayCount"></TextView>
+
+    <TextView
+        android:id="@+id/txt_DayCount"
         android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/exit"
-        tools:layout_editor_absoluteY="40dp" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sw_locationsupdates"
+        app:layout_constraintTop_toTopOf="@+id/sw_locationsupdates"></TextView>
 
-    <ImageView
-        android:id="@+id/image_upload"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/upload"
-        app:layout_constraintTop_toBottomOf="@+id/imageStop" />
+    <TextView
+        android:id="@+id/txt_Encourage"
+        android:layout_width="220dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textStyle="italic"
+        android:textSize="23dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Welcome"></TextView>
 
 
+    <TextView
+        android:id="@+id/txt_Calories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/main_text"
+        android:textSize="17dp"
+        android:textStyle="bold|italic"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="100dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_MaxSpeed"></TextView>
+
+    <TextView
+        android:id="@+id/txt_MaxSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/main_text"
+        android:textStyle="bold|italic"
+        android:textSize="17dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Average_Speed"></TextView>
+
+    <TextView
+        android:id="@+id/txt_Average_Speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/main_text"
+        android:textSize="17dp"
+        android:textStyle="bold|italic"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="50dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Runtime"></TextView>
+
+    <TextView
+        android:id="@+id/txt_Runtime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/main_text"
+        android:textStyle="bold|italic"
+        android:textSize="17dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Encourage"></TextView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

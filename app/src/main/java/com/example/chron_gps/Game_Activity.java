@@ -13,8 +13,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -50,12 +48,18 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 public class Game_Activity extends AppCompatActivity implements SensorEventListener {
+
+    //Gia thn speedcounter
+    float totalSpeed=0;
+    int number_of_speed_mesurements=0;
+    float meanSpeed=0;
+    //Telos gia to Speedcounter
+
 
     Button btn_ready;
     private ImageView imagePlayPause;
@@ -130,6 +134,9 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+
+        getSupportActionBar().hide();
 
         //Gia to xrwma tou Activity
         statusbarcolor();
@@ -254,13 +261,15 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
                 if (mediaPlayer.isPlaying()) {
                     handler.removeCallbacks(updater);
                     mediaPlayer.pause();
+                    totalSpeed = 0;
+                    number_of_speed_mesurements = 0;
                     imagePlayPause.setImageResource(R.drawable.ic_play_game);
                 } else {
                     mediaPlayer.start();
                     imagePlayPause.setImageResource(R.drawable.ic_pause_game);
                     updateSeekBar();
                 }
-                Table_Game.add("------------------The user Play the Start Button--------------------------");
+                Table_Game.add("------------------The user Play the Start Button"+" Time: "+currentTime + "--------------------------");
                 //save(v);
             }
 
@@ -286,7 +295,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
     private void  prepareMediaPlayer(){
         try {
-            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/diaskelismos.mp3?alt=media&token=dd92309d-4ee9-4181-ad67-f77bf34dd0f6");
+            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/me%20fasmatografw.mp3?alt=media&token=bd62fe3d-dfc9-4e23-82cd-9e8727a5aabe");
             mediaPlayer.prepare();
             textTotalDuration.setText(milliSecondToTimer(mediaPlayer.getDuration()));
 
@@ -299,7 +308,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         @Override
         public void run() {
             updateSeekBar();
-            long currenDuration = mediaPlayer.getDuration();
+            long currenDuration = mediaPlayer.getCurrentPosition();
             textCurrentTime.setText(milliSecondToTimer(currenDuration));
         }
     };
@@ -422,19 +431,31 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Game");
         } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
         } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
-        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Game");
-        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
+        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Levis_Game");
+//        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Game");
+        } else if (User_Name.equals("Panagiwta")||User_Name.equals("Panagiwta ")){reference = rootNode.getReference("Panagiwtas_Game");
+
         } else {reference = rootNode.getReference("New_User_Game");}
 
         String Latitude = String.valueOf(location.getLatitude());
         String Longtitude = String.valueOf(location.getLongitude());
         String Altitude = String.valueOf(location.getAltitude());
         String Accuracy = String.valueOf(location.getAccuracy());
-        String Speed = String.valueOf(location.getSpeed());
+        String Speed = String.valueOf(location.getSpeed()*3.6);
+        totalSpeed = (float) (totalSpeed + (location.getSpeed()*3.6));
+        number_of_speed_mesurements = number_of_speed_mesurements +1;
+        if (number_of_speed_mesurements==0){
+            meanSpeed = totalSpeed;
+        }else
+            {meanSpeed = totalSpeed/number_of_speed_mesurements;
+        }
+
+
+
         FileOutputStream foss = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         //Table_Game.clear();
-        Table_Game.add("Number Of steps: "+stepDetect+" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
+        Table_Game.add("Number Of steps: "+stepDetect+" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " "+ "totalSpeed:"+ totalSpeed+ " "+"meanSpeed:"+meanSpeed+ " "+"number_of_speed_mesurements:"+number_of_speed_mesurements+ " "+ " Time: "+ currentTime +" Date "+LocalDate.now());
         //Table_Game.add("Enhmerwsh no:");
 
 
@@ -458,7 +479,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
             //}
 
 
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_GAME, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_GAME, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -517,7 +538,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
 
 
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_GAME, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_GAME, Toast.LENGTH_LONG).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -649,10 +670,10 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     private void statusbarcolor()
     {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity,this.getTheme()));
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity));
         }
     }
     //

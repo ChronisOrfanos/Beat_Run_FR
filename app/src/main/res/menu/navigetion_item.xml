@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:id="@+id/nav_daily"
+        android:icon="@drawable/daily_icon"
+         />
+
+    <item android:id="@+id/nav_upload"
+        android:icon="@drawable/download_icon"
+        android:title="Upload data"
+        android:tooltipText="gggg"/>
+
+    <item android:id="@+id/nav_music"
+        android:icon="@drawable/music_player_icon"
+        android:title="Music player"
+        />
+
+    <item android:id="@+id/nav_close"
+        android:icon="@drawable/bye_iconn"
+        android:title="Bye"/>
+
+
+
+</menu>

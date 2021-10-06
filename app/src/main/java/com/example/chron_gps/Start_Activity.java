@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -91,7 +90,9 @@ public class Start_Activity extends AppCompatActivity {
         } else if (Name.equals("Guru")||Name.equals("Guru ")){reference = rootNode.getReference("Guru_Infos");
         } else if (Name.equals("Moustakas")||Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Infos");
         } else if (Name.equals("Levis")||Name.equals("Levis ")){reference = rootNode.getReference("Levis_Infos");
-        } else if (Name.equals("Dad")||Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
+//        } else if (Name.equals("Dad")||Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
+        } else if (Name.equals("Panagiwta")||Name.equals("Panagiwta ")){reference = rootNode.getReference("Panagiwtas_Infos");
+
         } else {reference = rootNode.getReference("New_User_Infos");}
 
 
@@ -158,6 +159,9 @@ public class Start_Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        getSupportActionBar().hide();
+
 
 
         //Gia to xrwma tou Activity
@@ -331,10 +335,10 @@ public class Start_Activity extends AppCompatActivity {
     private void statusbarcolor()
     {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().setStatusBarColor(getResources().getColor(R.color.teal_200,this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.first_activity,this.getTheme()));
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.teal_200));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.blue_electric));
         }
     }
     //

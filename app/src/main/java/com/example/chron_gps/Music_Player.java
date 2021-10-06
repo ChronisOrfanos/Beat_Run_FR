@@ -37,11 +37,11 @@ import java.util.Locale;
 
 public class Music_Player extends AppCompatActivity {
 
-    Button btnplay, btnnext, btnprev, btnff, btnfr;
+//    Button  btnnext, btnprev, btnff, btnfr;
     TextView txtsname, txtsstart, txtsstop;
     SeekBar seekmusic;
-    BarVisualizer visualizer;
-    ImageView imageView;
+//    BarVisualizer visualizer;
+    ImageView imageView, btnplay, btnnext, btnprev, btnff, btnfr;
 
     String sname;
     public static final String EXTRA_NAME = "song_name";
@@ -61,55 +61,50 @@ public class Music_Player extends AppCompatActivity {
     ArrayList<String> Table_File = new ArrayList<String>();
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void save(View v) {
-
-        FileOutputStream fos = null;
-        Song_number += 1;
-        currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-        Table_File.add("Song no:"+Song_number+" -------------------------------------------------------" + " Time: "+ currentTime);
-
-
-
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void save(View v) {
 //
-////         plhrofories hmera
-//        try {
-//            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
-//
-//            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
-//            fos = openFileOutput(FILE_NAME2, MODE_APPEND);
-//            for (int i=0; i< Table_File.size(); i++)
-//                fos.write(((Table_File.get(i)+"\n").getBytes()));
-//
-//
-//            //fos.write(text.getBytes());
+//        FileOutputStream fos = null;
+//        Song_number += 1;
+//        currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
+//        Table_File.add("Song no:"+Song_number+" -------------------------------------------------------" + " Time: "+ currentTime);
 //
 //
 //
-//
-//
-//            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }finally {
-//            if (fos != null){
-//                try {
-//                    fos.close();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//        }
-    }
-
-
-
-
-
-    //
+////
+//////         plhrofories hmera
+////        try {
+////            FILE_NAME2 = LocalDate.now().toString()+"Data.txt";
+////
+////            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
+////            fos = openFileOutput(FILE_NAME2, MODE_APPEND);
+////            for (int i=0; i< Table_File.size(); i++)
+////                fos.write(((Table_File.get(i)+"\n").getBytes()));
+////
+////
+////            //fos.write(text.getBytes());
+////
+////
+////
+////
+////
+////            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME2, Toast.LENGTH_LONG).show();
+////        } catch (FileNotFoundException e) {
+////            e.printStackTrace();
+////        } catch (IOException e) {
+////            e.printStackTrace();
+////        }finally {
+////            if (fos != null){
+////                try {
+////                    fos.close();
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////                }
+////            }
+////
+////        }
+//    }
+//    //
 
 
 
@@ -124,20 +119,22 @@ public class Music_Player extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onDestroy() {
-        if (visualizer != null)
-        {
-            visualizer.release();
-        }
-        super.onDestroy();
-    }
+//    @Override
+//    protected void onDestroy() {
+//        if (visualizer != null)
+//        {
+//            visualizer.release();
+//        }
+//        super.onDestroy();
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music_player);
 
+
+        getSupportActionBar().hide();
 
         //Gia to xrwma tou Activity
         statusbarcolor();
@@ -156,7 +153,7 @@ public class Music_Player extends AppCompatActivity {
         txtsstart = findViewById(R.id.txtsstart);
         txtsstop = findViewById(R.id.txtsstop);
         seekmusic = findViewById(R.id.seekbar);
-        visualizer = findViewById(R.id.blast);
+//        visualizer = findViewById(R.id.blast);
         imageView = findViewById(R.id.imageview);
 
         if (mediaPlayer != null)
@@ -207,8 +204,8 @@ public class Music_Player extends AppCompatActivity {
 
         seekmusic.setMax(mediaPlayer.getDuration());
         updateseekbar.start();
-        seekmusic.getProgressDrawable().setColorFilter(getResources().getColor(R.color.design_default_color_primary), PorterDuff.Mode.MULTIPLY);
-        seekmusic.getThumb().setColorFilter(getResources().getColor(R.color.design_default_color_primary), PorterDuff.Mode.SRC_IN);
+        seekmusic.getProgressDrawable().setColorFilter(getResources().getColor(R.color.av_yellow), PorterDuff.Mode.MULTIPLY);
+        seekmusic.getThumb().setColorFilter(getResources().getColor(R.color.av_yellow), PorterDuff.Mode.SRC_IN);
 
         seekmusic.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -254,17 +251,20 @@ public class Music_Player extends AppCompatActivity {
             public void onClick(View v) {
                 if (mediaPlayer.isPlaying())
                 {
-                    btnplay.setBackgroundResource(R.drawable.ic_play);
+                    btnplay.setBackgroundResource(R.drawable.chr_play333);
                     mediaPlayer.pause();
                 }
                 else
                 {
-                    btnplay.setBackgroundResource(R.drawable.ic_pause);
+                    btnplay.setBackgroundResource(R.drawable.chr_pause3);
                     mediaPlayer.start();
                    // save(v);
                     //Edw na valw ton fakelo
                 }
+                startAnimation(imageView);
+
             }
+
         });
         // next listener
 
@@ -276,10 +276,10 @@ public class Music_Player extends AppCompatActivity {
         });
 
         int audiosessionId = mediaPlayer.getAudioSessionId();
-        if (audiosessionId !=- 1)
-        {
-            visualizer.setAudioSessionId(audiosessionId);
-        }
+//        if (audiosessionId !=- 1)
+//        {
+//            visualizer.setAudioSessionId(audiosessionId);
+//        }
 
         btnnext.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -293,15 +293,15 @@ public class Music_Player extends AppCompatActivity {
                 sname = mySongs.get(position).getName();
                 txtsname.setText(sname);
                 mediaPlayer.start();
-                btnplay.setBackgroundResource(R.drawable.ic_pause);
+                btnplay.setBackgroundResource(R.drawable.chr_pause);
                 startAnimation(imageView);
                 int audiosessionId = mediaPlayer.getAudioSessionId();
-                if (audiosessionId !=- 1)
-                {
-                    visualizer.setAudioSessionId(audiosessionId);
-                }
-                save(v);
-
+//                if (audiosessionId !=- 1)
+//                {
+//                    visualizer.setAudioSessionId(audiosessionId);
+//                }
+//                save(v);
+//
 
 
             }
@@ -319,13 +319,13 @@ public class Music_Player extends AppCompatActivity {
                 sname = mySongs.get(position).getName();
                 txtsname.setText(sname);
                 mediaPlayer.start();
-                btnplay.setBackgroundResource(R.drawable.ic_pause);
+                btnplay.setBackgroundResource(R.drawable.chr_pause);
                 startAnimation(imageView);
                 int audiosessionId = mediaPlayer.getAudioSessionId();
-                if (audiosessionId !=- 1)
-                {
-                    visualizer.setAudioSessionId(audiosessionId);
-                }
+//                if (audiosessionId !=- 1)
+//                {
+//                    visualizer.setAudioSessionId(audiosessionId);
+//                }
             }
         });
 
@@ -387,10 +387,12 @@ public class Music_Player extends AppCompatActivity {
     private void statusbarcolor()
     {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow,this.getTheme()));
+//            getWindow().setStatusBarColor(getResources().getColor(R.color.cardview_dark_background,this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.music_player,this.getTheme()));
+
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.av_yellow));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.cardview_dark_background));
         }
     }
     //
