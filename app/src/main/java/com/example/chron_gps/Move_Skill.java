@@ -430,7 +430,7 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
             getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity2,this.getTheme()));
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity2));
         }
     }
     //

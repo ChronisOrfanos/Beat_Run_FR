@@ -27,44 +27,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/yo"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/black" />
+
 
             <ImageView
                 android:id="@+id/yoko"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/yo"
+                android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:scaleType="centerCrop"
-                android:src="@drawable/old_man_run"
+                android:background="#1f2d38"
                 tools:ignore="MissingConstraints"></ImageView>
-
-
-
-
-
-
-
-
-
-
-
-            <RelativeLayout
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:layout_marginTop="300dp">
-
-
-
-
-
-            </RelativeLayout>
-
 
         </RelativeLayout>
 
@@ -81,19 +53,11 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/imagePlayPause"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints">
 
     </ImageView>
-
-
-    <!--        <com.jjoe64.graphview.GraphView-->
-    <!--            android:id="@+id/graph"-->
-    <!--            android:layout_width="280dp"-->
-    <!--            android:layout_height="170dp"-->
-    <!--            android:background="@color/cardview_dark_background" />-->
-
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/float_users"
@@ -107,6 +71,7 @@
         app:fab_expandDirection="down"
         app:fab_labelStyle="@style/custom_fab"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
 
@@ -204,8 +169,8 @@
     <ImageView
         android:id="@+id/image_Users_float"
         android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:src="@drawable/chr_user_elpzw"
+        android:layout_height="50dp"
+        android:src="@drawable/giapameee"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -213,7 +178,7 @@
         android:id="@+id/edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foregroundTint="#FFEB3B"
+        android:foregroundTint="#7DCCD6"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/btn_save"
         app:layout_constraintStart_toEndOf="@+id/btn_save"
@@ -226,9 +191,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/edit_text"
         android:layout_centerHorizontal="true"
-        android:backgroundTint="#E8D10B"
+        android:backgroundTint="#7DCCD6"
+        android:layout_marginBottom="45dp"
         android:text="save error"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
     >
@@ -237,13 +205,27 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigator"
         android:layout_width="300dp"
-        android:layout_height="60dp"
-        android:background="@color/navigator"
-        android:outlineAmbientShadowColor="@color/white"
-        android:outlineSpotShadowColor="@color/white"
-        app:itemTextColor="@color/teal_200"
+        android:layout_height="50dp"
+        android:background="#23303A"
+        app:itemTextColor="#7DCCD6"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/navigetion_item"
         tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigator2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="290dp"
+        android:background="#23303A"
+        app:itemTextColor="#7DCCD6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/navigator"
+        app:menu="@menu/naviget_2"
+        tools:ignore="MissingConstraints" />
+
+
 
     <Switch
         android:id="@+id/sw_locationsupdates"
@@ -252,10 +234,9 @@
         android:layout_alignParentEnd="true"
         android:checked="false"
         android:text="Location Updates"
-        android:textColor="#E8D10B"
+        android:textColor="#7DCCD6"
         android:textSize="13sp"
         android:thumbTint="#00BCD4"
-        android:layout_marginTop="60dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 
@@ -264,8 +245,8 @@
         android:layout_width="200dp"
         android:layout_height="20dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="60dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_save"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -274,7 +255,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0:00"
-        android:textColor="#212121"
+        android:textColor="#7DCCD6"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/playerSeekBar"
@@ -285,7 +266,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0:00"
-        android:textColor="#212121"
+        android:textColor="#7DCCD6"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/playerSeekBar"
@@ -293,10 +274,10 @@
 
     <ImageView
         android:id="@+id/imagePlayPause"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/chr_play3333"
+        android:src="@drawable/ic_play_game"
         app:layout_constraintBottom_toTopOf="@+id/playerSeekBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -309,7 +290,7 @@
         android:background="@drawable/circle_shape"
         android:indeterminate="false"
         android:indeterminateDrawable="@drawable/progress_bar"
-        android:progress="50"
+        android:progress="70"
         android:progressDrawable="@drawable/progress_bar"
         android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="@+id/logo_refresh"
@@ -326,8 +307,8 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:text="___"
-        android:textColor="#E1D2D2"
+        android:text="0%"
+        android:textColor="#7DCCD6"
         android:textSize="20dp"
         android:textStyle="bold|italic"
         app:layout_constraintBottom_toBottomOf="@+id/logo_refresh"
@@ -339,7 +320,8 @@
         android:id="@+id/txt_Welcome"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:text="Welcome"
+        android:textColor="#7DCCD6"
         android:textSize="23dp"
         android:textStyle="italic"
         android:gravity="center"
@@ -351,9 +333,10 @@
         android:id="@+id/txt_DayCount"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:textColor="#7DCCD6"
+        android:text="Day:"
         android:gravity="center"
-        android:textStyle="bold"
+        android:textStyle="italic|bold"
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/sw_locationsupdates"
@@ -363,7 +346,7 @@
         android:id="@+id/txt_Encourage"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:textColor="#7DCCD6"
         android:gravity="center"
         android:textStyle="italic"
         android:textSize="23dp"
@@ -372,32 +355,24 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_Welcome"></TextView>
 
 
+
+    <TextView
+        android:id="@+id/txt_Runtime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Runtime:"
+        android:textColor="@color/main_text"
+        android:textStyle="bold|italic"
+        android:textSize="17dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Encourage"></TextView>
+
     <TextView
         android:id="@+id/txt_Calories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/main_text"
-        android:textSize="17dp"
-        android:textStyle="bold|italic"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="100dp"
-        app:layout_constraintTop_toBottomOf="@+id/txt_MaxSpeed"></TextView>
-
-    <TextView
-        android:id="@+id/txt_MaxSpeed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/main_text"
-        android:textStyle="bold|italic"
-        android:textSize="17dp"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Average_Speed"></TextView>
-
-    <TextView
-        android:id="@+id/txt_Average_Speed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:text="Today's Colories:"
         android:textColor="@color/main_text"
         android:textSize="17dp"
         android:textStyle="bold|italic"
@@ -406,15 +381,26 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_Runtime"></TextView>
 
     <TextView
-        android:id="@+id/txt_Runtime"
+        android:id="@+id/txt_MaxSpeed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Maximum Speed:"
         android:textColor="@color/main_text"
         android:textStyle="bold|italic"
         android:textSize="17dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
-        app:layout_constraintTop_toBottomOf="@+id/txt_Encourage"></TextView>
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_Calories"></TextView>
 
-
+    <TextView
+        android:id="@+id/txt_Average_Speed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Average speed:"
+        android:textColor="@color/main_text"
+        android:textSize="17dp"
+        android:textStyle="bold|italic"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="100dp"
+        app:layout_constraintTop_toBottomOf="@+id/txt_MaxSpeed"></TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

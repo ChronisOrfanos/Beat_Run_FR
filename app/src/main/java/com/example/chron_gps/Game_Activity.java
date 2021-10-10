@@ -670,10 +670,10 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     private void statusbarcolor()
     {
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.M){
-            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity,this.getTheme()));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity2,this.getTheme()));
         }else if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP)
         {
-            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity));
+            getWindow().setStatusBarColor(getResources().getColor(R.color.second_activity2));
         }
     }
     //

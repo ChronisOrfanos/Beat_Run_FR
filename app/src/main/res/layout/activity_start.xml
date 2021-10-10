@@ -199,7 +199,7 @@
                 android:layout_marginRight="40dp"
                 android:background="@drawable/edit_txt_1_start"
                 android:fontFamily="@font/roboto_light_start"
-                android:hint="Test1/Test_2/..."
+                android:hint="6MWT/HST"
                 android:inputType="textShortMessage"
                 android:paddingLeft="20dp"
                 android:textColorHint="#DADADA" />

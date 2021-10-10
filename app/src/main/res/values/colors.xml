@@ -7,10 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
 
+
+    <color name="second_activityre">#1E2A33</color>
+
     <color name="second_activity2">#505662</color>
     <color name="second_activity">#3BADEA</color>
 
-    <color name="main_text">#242325</color>
+    <color name="main_text">#967FC3</color>
 
 
     <color name="first_activity2">#131313</color>
