@@ -80,11 +80,18 @@ import java.util.Locale;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener , LocationListener {
+
+    public static final String NAME = "NAME";
+
     public static final int DEFAULT_UPDATE_INTERVAL = 5;
     public static final int FAST_UPDATE_INTERVAL = 3;
     private static final int PERMISSIONS_FINE_LOCATION = 99;
     private static String FILE_ERROR ;
     private static String FILE_DATA ;
+
+    //Gia INTENT---------------------------------------------
+    private String name;
+    //Telos INTENT-------------------------------------------
 
     //Gia ta text tou xronoy
     TextView txt_Welcome, txt_Encourage, txt_DayCount, txt_Calories, txt_MaxSpeed, txt_Average_Speed, txt_Runtime;
@@ -121,14 +128,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     int metavatiko_stepDetector = 0;
     // Telos StepCounter
 
-    //Gia to GraphView--------------------------------------------------------------------------
-    LineGraphSeries<DataPoint> series;
-    ArrayList<Integer> Graph_Points_x = new ArrayList<Integer>();
-    ArrayList<Integer> Graph_Points_y = new ArrayList<Integer>();
-    // Telos tou GraphView----------------------------------------------------------------------
 
     int start = 0;
-    int Error_pointer = 0;
 
     ArrayList<String> Run_Data = new ArrayList<String>();
     ArrayList<String> Errors_Data = new ArrayList<String>();
@@ -136,7 +137,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     EditText mEditText;
 
-    Calendar calendar = Calendar.getInstance();
     String currentTime;
 
 
@@ -148,14 +148,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Handler handler = new Handler();
 
     //Telos gia Imerisio----------------------------------------------------------------------------
-
-
-    //Gia INTENT---------------------------------------------
-    //String User_Name;//auto logika pleon axristo MALLON
-    String userName;
-    //String User_Name_tel;
-
-    //Telos INTENT-------------------------------------------
 
     //Gia to FireBase-----------------------------
     FirebaseDatabase rootNode;
@@ -190,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void save(View v) {
+    public void save() {
         String text = mEditText.getText().toString();
         FileOutputStream fos = null;
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
@@ -199,61 +191,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //Firebase
         rootNode = FirebaseDatabase.getInstance();
-//
-//        if(User_Name !=null){
-//        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Runs");
-//        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Runs");
-//        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Runs");
-//        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Runs");
-//        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Runs");
-//        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Levis_Runs");
-//        } else {reference = rootNode.getReference("New_User_Runs");}
-//        //reference = rootNode.getReference("sooo");
-//        //reference.setValue("llll");
-//
-//        }else if (User==1){reference =rootNode.getReference("Chronis_Runs");
-//        }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
-//        }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
-//        }else if (User==4){reference =rootNode.getReference("Guru_Runs");
-//        }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
-//        }else if (User==6){reference =rootNode.getReference("Levis_Runs");
-//        }else {reference =rootNode.getReference("New_User_Runs");}
-//        uploadList(v);
 
-      if (User==1){reference =rootNode.getReference("Chronis_Runs");
-      }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
-      }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
-      }else if (User==4){reference =rootNode.getReference("Guru_Runs");
-      }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
-      }else if (User==6){reference = rootNode.getReference("Levis_Runs");
-//      }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
-      }else if (User==7){reference = rootNode.getReference("Panagiwtas_Runs");
-      }else {reference =rootNode.getReference("New_User_Runs");}
-      uploadList();
+
+//      if (User==1){reference =rootNode.getReference("Chronis_Runs");
+//      }else {reference =rootNode.getReference("New_User_Runs");}
+        rootNode = FirebaseDatabase.getInstance();
+        reference = rootNode.getReference(name).child("Run");
+      //uploadList();
         //
 
         // plhrofories hmera
-        try {
-            FILE_ERROR = LocalDate.now().toString()+"Errors.txt";
-            fos = openFileOutput(FILE_ERROR, MODE_APPEND);
-            for (int i=0; i< Errors_Data.size(); i++)
-                fos.write(((Errors_Data.get(i)+"\n").getBytes()));
-
-            mEditText.getText().clear();
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//        try {
+//            FILE_ERROR = LocalDate.now().toString()+"Errors.txt";
+//            fos = openFileOutput(FILE_ERROR, MODE_APPEND);
+//            for (int i=0; i< Errors_Data.size(); i++)
+//                fos.write(((Errors_Data.get(i)+"\n").getBytes()));
+//
+//            mEditText.getText().clear();
+//            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_LONG).show();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            if (fos != null){
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -261,6 +229,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        //Gia to INTENT-----------------------------------------------------------------------------
+        Intent intent = getIntent();
+        name = intent.getStringExtra(NAME);
+        //Telos INTENT------------------------------------------------------------------------------//
 
         //Gia ta text tou xronoy
         txt_Welcome = findViewById(R.id.txt_Welcome);
@@ -298,42 +271,29 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //Navigator Bar
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigator);
-        BottomNavigationView bottomNavigationView2 = findViewById(R.id.navigator2);
-        bottomNavigationView2.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                rootNode = FirebaseDatabase.getInstance();
+                reference = rootNode.getReference(name).child("Run");
+                switch (menuItem.getItemId()){
+                    case R.id.nav_music:{
+                        openMusic_List();}
+                }
                 switch (menuItem.getItemId()){
                     case R.id.nav_close:
                         onDestroy();
                         finish();
                         Intent intent_arx = new Intent(MainActivity.this, Start_Activity.class );
                 }
-                return false;
-            }
-        });
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()){
-                    case R.id.nav_music:{
-                        openMusic_List();}
-                }
-                switch (menuItem.getItemId()){
-                    case R.id.nav_daily:{
-                        download(userName);}
-                }
-                switch (menuItem.getItemId()){
-                    case R.id.nav_upload:{rootNode = FirebaseDatabase.getInstance();
-                        if (User==1){reference =rootNode.getReference("Chronis_Runs");
-                        }else if (User==2){reference =rootNode.getReference("Xiro_Runs");
-                        }else if (User==3){reference =rootNode.getReference("Moustakas_Runs");
-                        }else if (User==4){reference =rootNode.getReference("Guru_Runs");
-                        }else if (User==5){reference =rootNode.getReference("Sousanis_Runs");
-                        }else if (User==6){reference = rootNode.getReference("Levis_Runs");
-//                }else if (User==7){reference = rootNode.getReference("Dadys_Runs");
-                        }else if (User==7){reference = rootNode.getReference("Panagiwtas_Runs");
-                        }else {reference =rootNode.getReference("New_User_Errors");}
+                    case R.id.nav_upload:{
+//                        if (User==1){reference =rootNode.getReference("Chronis_Runs");
+//                        }else {reference =rootNode.getReference("New_User_Errors");}
+//                        rootNode = FirebaseDatabase.getInstance();
+//                        reference = rootNode.getReference(name).child("Run");
                         uploadList();}
                 }
                 return false;
@@ -368,7 +328,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         //Gia to StepCounter--------------------------------------------------------------------------------------------------------------------------------------
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        //textViewStepDetector = findViewById(R.id.textViewStepDetector);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null) {
             mStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
@@ -383,64 +342,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //Gia to xrwma tou Activity
         statusbarcolor();
         //Telos gia to xrwma tou Actiity
-
-        //Gia to GraphView--------------------------------------------------------------------------
-        double x,y;
-        x=0.0;
-        y=3.0;
-
-//        Graph_Points_x.clear();
-//        Graph_Points_y.clear();
-//
-//for (int i=0; i<15; i=i+3){
-//            Graph_Points_x.add(i);
-//        }
-//        Graph_Points_y.add(2);
-//        Graph_Points_y.add(3);
-//        Graph_Points_y.add(2);
-//        Graph_Points_y.add(1);
-//        Graph_Points_y.add(0);
-//        Graph_Points_y.add(3);
-//        Graph_Points_y.add(2);
-//        Graph_Points_y.add(3);
-//        Graph_Points_y.add(2);
-//        Graph_Points_y.add(3);
-//        Graph_Points_y.add(0);
-//        Graph_Points_y.add(1);
-//        Graph_Points_y.add(2);
-//        Graph_Points_y.add(3);
-//        Graph_Points_y.add(4);
-//
-//        Graph_Points_x.add(2);
-//        Graph_Points_x.add(3);
-//        Graph_Points_x.add(2);
-//        Graph_Points_x.add(1);
-//        Graph_Points_x.add(0);
-//        Graph_Points_x.add(3);
-//        Graph_Points_x.add(2);
-//        Graph_Points_x.add(3);
-//        Graph_Points_x.add(2);
-//        Graph_Points_x.add(3);
-//        Graph_Points_x.add(0);
-//        Graph_Points_x.add(1);
-//        Graph_Points_x.add(2);
-//        Graph_Points_x.add(3);
-//        Graph_Points_x.add(4);
-
-
-        //GraphView graph = (GraphView) findViewById(R.id.graph);
-        series = new LineGraphSeries<DataPoint>();
-        for (int i = 0; i<10; i++){
-            x = x + 3;
-//            y = y + 1;
-            y = Math.sin(x);
-//            x = Graph_Points_x.get(i);
-//            y = Graph_Points_y.get(i);
-            series.appendData(new DataPoint(x,y), true, 400);
-        }
-        //graph.addSeries(series);
-
-        // Telos tou GraphView----------------------------------------------------------------------
 
         //Gia Backround-----------------------------------------------------------------------------
         Intent intentBack = new Intent(this,MyService.class);
@@ -470,41 +371,39 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //Firebase
                 rootNode = FirebaseDatabase.getInstance();
 
-                if (User==1){reference =rootNode.getReference("Chronis_Errors");
-                }else if (User==2){reference =rootNode.getReference("Xiro_Errors");
-                }else if (User==3){reference =rootNode.getReference("Moustakas_Errors");
-                }else if (User==4){reference =rootNode.getReference("Guru_Errors");
-                }else if (User==5){reference =rootNode.getReference("Sousanis_Errors");
-                }else if (User==6){reference = rootNode.getReference("Levis_Errors");
-//                }else if (User==7){reference = rootNode.getReference("Dadys_Errors");
-                }else if (User==7){reference = rootNode.getReference("Panagiwtas_Errors");
-                }else {reference =rootNode.getReference("New_User_Errors");}
+                Intent intent = new Intent(MainActivity.this, MainActivity.class );
+                intent.putExtra(MainActivity.NAME,name);
+
+                rootNode = FirebaseDatabase.getInstance();
+                reference = rootNode.getReference(name).child("Errors");
+//                if (User==1){reference =rootNode.getReference("Chronis_Errors");
+//                }else {reference =rootNode.getReference("New_User_Errors");}
                 uploadErrorList(v);
                 //
 
                 // plhrofories hmera
-                try {
-                    FILE_ERROR = LocalDate.now().toString()+"Errors.txt";
-                    fos = openFileOutput(FILE_ERROR, MODE_APPEND);
-                    for (int i=0; i< Errors_Data.size(); i++)
-                        fos.write(((Errors_Data.get(i)+"\n").getBytes()));
-
-                    mEditText.getText().clear();
-                    Toast.makeText(MainActivity.this, "Saved to" +getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_SHORT).show();
-//                    Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_LONG).show();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }finally {
-                    if (fos != null){
-                        try {
-                            fos.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+//                try {
+//                    FILE_ERROR = LocalDate.now().toString()+"Errors.txt";
+//                    fos = openFileOutput(FILE_ERROR, MODE_APPEND);
+//                    for (int i=0; i< Errors_Data.size(); i++)
+//                        fos.write(((Errors_Data.get(i)+"\n").getBytes()));
+//
+//                    mEditText.getText().clear();
+//                    Toast.makeText(MainActivity.this, "Saved to" +getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_SHORT).show();
+////                    Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_ERROR, Toast.LENGTH_LONG).show();
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }finally {
+//                    if (fos != null){
+//                        try {
+//                            fos.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }
             }
         });
         //Telos gia ta Errors-----------------------------------------------------------------------
@@ -530,67 +429,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 details();
             }
         });
-        FloatingActionButton fab2 = findViewById(R.id.fab_action2);
-        fab2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showToast("Welcome Xirako");
-                User=2;
-                ref_xronou = FirebaseDatabase.getInstance().getReference().child("Xirorafas");
-                details();
-            }
-        });
-        FloatingActionButton fab3 = findViewById(R.id.fab_action3);
-        fab3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showToast("Welcome k.Moustaka");
-                User=3;
-                ref_xronou = FirebaseDatabase.getInstance().getReference().child("Moustakas");
-                details();
-            }
-        });
-        FloatingActionButton fab4 = findViewById(R.id.fab_action4);
-        fab4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showToast("Welcome Trele Guru!");
-                User=4;
-                ref_xronou = FirebaseDatabase.getInstance().getReference().child("Guru");
-                details();
-            }
-        });
-        FloatingActionButton fab5 = findViewById(R.id.fab_action5);
-        fab5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showToast("Τι κάνεις μωρή τσουτσού ");
-                User=5;
-                ref_xronou = FirebaseDatabase.getInstance().getReference().child("Sousanis");
-                details();
-            }
-        });
-        FloatingActionButton fab6 = findViewById(R.id.fab_action6);
-        fab6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showToast("Γεια σου Μαούση");
-                User=6;
-                ref_xronou = FirebaseDatabase.getInstance().getReference().child("Levis");
-                details();
-            }
-        });
-//        FloatingActionButton fab7 = findViewById(R.id.fab_action7);
-//        fab7.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) { showToast("Τρέχα γέρο");
-//                User=7;
-//            }
-//        });
-         FloatingActionButton fab7 = findViewById(R.id.fab_action7);
-        fab7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { showToast("Ευχαριστώ ρε Παναγιωτάρααα <3 ");
-                User=7;
-                ref_xronou = FirebaseDatabase.getInstance().getReference().child("Panagiwta");
-                details();
-            }
-        });
         FloatingActionButton fab8 = findViewById(R.id.fab_action8);
         fab8.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -602,9 +440,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         // Telos koumparas---------------------------------------
 
-        //Gia to INTENT-----------------------------------------------------------------------------
-        Intent intent = getIntent();
-        String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
 
         //Gia to Firebase
         myList = new ArrayList<>();
@@ -726,61 +561,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     // Telos koumparas---------------------------------------
 
-    //Gia to FireBase Download----------------------------------------------------------------------
-    public void download(String userName)
-    { storageReference = firebaseStorage.getInstance().getReference();
-
-        if (User==1)//    if (userName.equals("Chronis")||userName.equals("Chronis "))
-        {ref1 = storageReference.child("Chronis").child("1.mp3");
-//            ref2 = storageReference.child("Chronis").child("2.mp3");
-//            ref3 = storageReference.child("Chronis").child("3.mp3");
-//            ref4 = storageReference.child("Chronis").child("4.mp3");
-//            ref5 = storageReference.child("Chronis").child("5.mp3");
-//            ref6 = storageReference.child("Chronis").child("6.mp3");
-//            ref7 = storageReference.child("Chronis").child("7.mp3");
-//            ref8 = storageReference.child("Chronis").child("8.mp3");
-//            ref9 = storageReference.child("Chronis").child("9.mp3");
-//            ref10 = storageReference.child("Chronis").child("10.mp3");
-        }else if(User==2){
-            ref1 = storageReference.child("Xirorafas").child("1.mp3");
-
-            ref1 = storageReference.child("Sousanis").child("1.mp3");
-        }else if(User==4){
-            ref1 = storageReference.child("Guru").child("1.mp3");
-        }else if(User==5){
-            ref1 = storageReference.child("Moustakas").child("1.mp3");
-        }else if(User==6){
-            ref1 = storageReference.child("Levis").child("1.mp3");
-        }else if(User==7){
-//            ref1 = storageReference.child("Dady").child("1.mp3");
-            ref1 = storageReference.child("Panagiwta").child("1.mp3");
-        }else if(User==8){ref1 = storageReference.child("New_User").child("1.mp3");
-             }else {  showToast("You have to choose User");}
-        //logika ama thelw ola ta tragoudia tote xwris child
-//        ref1 = storageReference.child("John").child("1.mp3");
-//        ref2 = storageReference.child("John").child("2.mp3");
-//        ref3 = storageReference.child("John").child("3.mp3");
-//        ref4 = storageReference.child("John").child("4.mp3");
-//        ref5 = storageReference.child("John").child("5.mp3");
-//        ref6 = storageReference.child("John").child("6.mp3");
-//        ref7 = storageReference.child("John").child("7.mp3");
-//        ref8 = storageReference.child("John").child("8.mp3");
-//        ref9 = storageReference.child("John").child("9.mp3");
-//        ref10 = storageReference.child("John").child("10.mp3");
-
-        if (User==1||User==2||User==3||User==4||User==5||User==6||User==7||User==8){
-        ref1.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                String url=uri.toString();
-                downloadFile(MainActivity.this, "a1_run", ".mp3",DIRECTORY_DOWNLOADS,url);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-            }
-        });} else showToast("You have to choose User");
-    }
 
     public void downloadFile(Context context, String fileName, String fileExtension, String destinationDirectory, String url){
 
@@ -879,26 +659,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (!(start % 2 == 0)){Run_Data.add("He push the Play Button------------------------------------------------"+" Time: "+ currentTime +" Date "+LocalDate.now());start=start+1;}
 
         Run_Data.add("User: "+User+ " " + "Num of steps: " + stepDetect +" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + speed+ " Time: "+ currentTime +" Date "+LocalDate.now());
-        try {
-            FILE_DATA = LocalDate.now().toString()+"Data.txt";
-            foss = openFileOutput(FILE_DATA, MODE_APPEND);
-
-                      for (int i=0; i< Run_Data.size(); i++)
-                      foss.write(((Run_Data.get(i)+"\n").getBytes()));
-            //Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_DATA, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (foss != null){
-                try {
-                    foss.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+//        try {
+//            FILE_DATA = LocalDate.now().toString()+"Data.txt";
+//            foss = openFileOutput(FILE_DATA, MODE_APPEND);
+//
+//                      for (int i=0; i< Run_Data.size(); i++)
+//                      foss.write(((Run_Data.get(i)+"\n").getBytes()));
+//            //Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_DATA, Toast.LENGTH_LONG).show();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            if (foss != null){
+//                try {
+//                    foss.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
 
     //Gia thn mousikh
@@ -911,17 +691,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //myList.add("New Button Data");
         myList.add(Run_Data.toString());
 
-        if (User==1||User==2||User==3||User==4||User==5||User==6||User==7||User==8){
-            reference.setValue(myList)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        Toast.makeText(getApplicationContext(),"Data are uploaded successfully, Dont upload again for today", Toast.LENGTH_LONG).show();
-                    }
-                }
-        });
-        }else showToast("You have to choose User");
+        rootNode = FirebaseDatabase.getInstance();
+        reference = rootNode.getReference(name).child("Run");
+//        if (User==1||User==2||User==3||User==4||User==5||User==6||User==7||User==8){
+//            reference.setValue(myList)
+//            .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Void> task) {
+//                    if (task.isSuccessful()){
+//                        Toast.makeText(getApplicationContext(),"Data are uploaded successfully, Dont upload again for today", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//        });
+//        }else showToast("You have to choose User");
     }
 
     public void uploadErrorList(View v){
@@ -955,7 +737,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     {
                         stringBuilder.append(TableList.get(i) + ",");
                     }
-                    //Toast.makeText(getApplicationContext(), stringBuilder.toString(),Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -965,24 +746,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
-    //Gia Imerisio----------------------------------------------------------------------------------
     private void  prepareMediaPlayer(){
         try {
-                    final ArrayList<File> mySongs = findSong(Environment.getExternalStorageDirectory());
-                    FileDescriptor fd =null;
-            try {
-                FileInputStream stream = new FileInputStream(mySongs.get(0));
-                fd = stream.getFD();
-            } catch (IOException ex){}
-            mediaPlayer.setDataSource(fd);
-
-//            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/Skill.mp3?alt=media&token=f04ed603-a5a5-4d97-923c-3e66263a2367");
+            mediaPlayer.setDataSource("https://firebasestorage.googleapis.com/v0/b/music-97497.appspot.com/o/Skill.mp3?alt=media&token=f04ed603-a5a5-4d97-923c-3e66263a2367");
             mediaPlayer.prepare();
             textTotalDuration.setText(milliSecondToTimer(mediaPlayer.getDuration()));
+
         } catch (Exception exception){
             Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private Runnable updater = new Runnable() {
         @Override
@@ -1029,39 +803,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             getWindow().setStatusBarColor(getResources().getColor(R.color.second_activityre));
         }
     }
-    //
-      public ArrayList<File> findSong(File file) {
-        ArrayList<File> arrayList = new ArrayList<>();
-        File[] files = file.listFiles();
-        try {
-            FileInputStream stream = new FileInputStream(file);
-            FileDescriptor fd = stream.getFD();
-        }
-        catch (IOException ex){}
-        for (File singlefile : files) {
-            if (singlefile.isDirectory() && !singlefile.isHidden()) {
-                arrayList.addAll(findSong(singlefile));
-            } else
-            {
-                if (singlefile.getName().endsWith("run.mp3") || singlefile.getName().endsWith(".wav")) {
-                    arrayList.add(singlefile);
-                }
-            }
-        }
-        return arrayList;
-    }
     //Gia to StepCounter Sinarthseis----------------------------------------------------------------
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //if (event.sensor == mStepCounter){
-        //stepCount = (int) event.values[0];
-        //textViewStepCounter.setText(String.valueOf(stepCount));
-        //}
-        //else
         if (event.sensor == mStepDetector){
             stepDetect = (int) (stepDetect + event.values[0]);
-            //textViewStepDetector.setText(String.valueOf(stepDetect));
         }
     }
 
@@ -1073,8 +820,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        //if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null)
-        //sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
 
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null)
             sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
@@ -1179,6 +924,3 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
     //Telos tou kainouriou Speedometer-------------------------------------------------------------------------------------------------------------
 }
-
-
-//// Mouaxaxaxaxa

@@ -42,10 +42,6 @@ public class Start_Activity extends AppCompatActivity {
     String currentTime;
     ArrayList<String> Infos = new ArrayList<String>();
 
-    //Gia INTENT
-    public static final String Share_User = "name";
-    //public static final String Share_User_2 = "name";
-    //
 
 
     //Gia to FireBase-----------------------------------------
@@ -84,27 +80,18 @@ public class Start_Activity extends AppCompatActivity {
 
         //Firebase---------------------------------------------------
         rootNode = FirebaseDatabase.getInstance();
-        if (Name.equals("Chronis")||Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Infos");
-        } else if (Name.equals("Xirorafas")||Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Infos");
-        } else if (Name.equals("Sousanis")||Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Infos");
-        } else if (Name.equals("Guru")||Name.equals("Guru ")){reference = rootNode.getReference("Guru_Infos");
-        } else if (Name.equals("Moustakas")||Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Infos");
-        } else if (Name.equals("Levis")||Name.equals("Levis ")){reference = rootNode.getReference("Levis_Infos");
-//        } else if (Name.equals("Dad")||Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
-        } else if (Name.equals("Panagiwta")||Name.equals("Panagiwta ")){reference = rootNode.getReference("Panagiwtas_Infos");
+        reference =  rootNode.getReference(Name).child("Infos");
 
-        } else {reference = rootNode.getReference("New_User_Infos");}
+//        if (Name.equals("Chronis")||Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Infos");
+//        } else if (Name.equals("Xirorafas")||Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Infos");
+//        } else if (Name.equals("Sousanis")||Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Infos");
+//        } else if (Name.equals("Guru")||Name.equals("Guru ")){reference = rootNode.getReference("Guru_Infos");
+//        } else if (Name.equals("Moustakas")||Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Infos");
+//        } else if (Name.equals("Levis")||Name.equals("Levis ")){reference = rootNode.getReference("Levis_Infos");
+////        } else if (Name.equals("Dad")||Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
+//        } else if (Name.equals("Panagiwta")||Name.equals("Panagiwta ")){reference = rootNode.getReference("Panagiwtas_Infos");
+//        } else {reference = rootNode.getReference("New_User_Infos");}
 
-
-
-
-            //else {
-            //reference = rootNode.getReference("Infos");
-        //} else if(Name.equals("Xirorafas")){
-          //  reference = rootNode.getReference("Xiro_Infos");
-        //}
-        //reference = rootNode.getReference("Infos");
-        //reference.setValue("llll");
         //Telos FireBase----------------------------------------------
 
 
@@ -116,43 +103,37 @@ public class Start_Activity extends AppCompatActivity {
 
 
         // plhrofories hmera
-        try {
-//            FILE_NAME_INFOS = LocalDate.now().toString()+"Infos";
-            FILE_NAME_INFOS = "Infos";
-
-            fos = openFileOutput(FILE_NAME_INFOS, MODE_APPEND);
-            for (int i=0; i< Infos.size(); i++)
-                fos.write(((Infos.get(i)+"\n").getBytes()));
-
-            //fos.write(text.getBytes());
-
-
-            email.getText().clear();
-            phone.getText().clear();
-            name.getText().clear();
-            age.getText().clear();
-            weigh.getText().clear();
-            usual_week_runs.getText().clear();
-            tests.getText().clear();
-
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME_INFOS, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
+//        try {
+////            FILE_NAME_INFOS = LocalDate.now().toString()+"Infos";
+//            FILE_NAME_INFOS = "Infos";
+//
+//            fos = openFileOutput(FILE_NAME_INFOS, MODE_APPEND);
+//            for (int i=0; i< Infos.size(); i++)
+//                fos.write(((Infos.get(i)+"\n").getBytes()));
+//
+//            email.getText().clear();
+//            phone.getText().clear();
+//            name.getText().clear();
+//            age.getText().clear();
+//            weigh.getText().clear();
+//            usual_week_runs.getText().clear();
+//            tests.getText().clear();
+//
+//            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME_INFOS, Toast.LENGTH_LONG).show();
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            if (fos != null){
+//                try {
+//                    fos.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
-
-
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -162,17 +143,13 @@ public class Start_Activity extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-
-
         //Gia to xrwma tou Activity
         statusbarcolor();
         getSupportActionBar().setTitle(Html.fromHtml("<font color=\"yellow\">" + getString(R.string.app_name) + "</font>"));
         //Telos xrwmatos Activity
 
-
         remember = findViewById(R.id.rememberMe);
         login = findViewById(R.id.loginBtn);
-
 
         //Gia to Firebase---------------------------------------------------------------------------
         myList = new ArrayList<>();
@@ -180,7 +157,7 @@ public class Start_Activity extends AppCompatActivity {
         TableList = new ArrayList<>();
 
         name = (EditText) findViewById(R.id.name);
-        String Name = name.getText().toString();
+        String User_name = name.getText().toString();
 
         //Telos FireBase----------------------------------------------------------------------------
 
@@ -203,20 +180,15 @@ public class Start_Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String Names = name.getText().toString();
 
-                //name = (EditText) findViewById(R.id.name);
-                String User_Name = name.getText().toString();
 
                 Intent intent = new Intent(Start_Activity.this,Move_Skill.class);
-                intent.putExtra(Share_User, User_Name);
 
+                intent.putExtra(Move_Skill.NAME,Names);
                 startActivity(intent);
                 save(v);
                 uploadList(v);
-
-                //String username = name.getText().toString();
-                //intent.putExtra("keyname", Name);
-
 
                 //Gia Firebase
 
@@ -266,24 +238,6 @@ public class Start_Activity extends AppCompatActivity {
         myList.add(Infos.toString());
 
         //gia na steileis
-        //ArrayList<String> Recent = new ArrayList<>();
-        //DatabaseReference resent = FirebaseDatabase.getInstance().getReference().child("yo");
-        //resent.addValueEventListener(new ValueEventListener() {
-        //@Override
-        //public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        //Recent.clear();
-        //for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-        //  Recent.add(snapshot.getValue().toString());
-        //}
-        //}
-
-        //@Override
-        //public void onCancelled(@NonNull DatabaseError dataseterror) {
-
-        //}
-        //});
-
-
         reference.setValue(myList)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -295,8 +249,6 @@ public class Start_Activity extends AppCompatActivity {
                     }
 
                 });
-
-
     }
 
     public void TableUpload(View v)
@@ -342,9 +294,5 @@ public class Start_Activity extends AppCompatActivity {
         }
     }
     //
-
-
-
-
 
 }

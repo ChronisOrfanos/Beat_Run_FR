@@ -43,10 +43,7 @@ import java.util.Locale;
 
 public class Move_Skill extends AppCompatActivity implements SensorEventListener {
 
-       //---------------------------- Gia na doume thn anapiria tou. Kathe fora pou pataei to play midenizei to Step Counter ---------------------------------\\
-
-
-
+    public static final String NAME = "NAME";
 
     Button btn_next;
     private ImageView imagePlayPause, Done_Check;
@@ -62,8 +59,8 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
     //Telos gia fakelo--------------------------------------------------------------------------------------------------------------------------
 
     //Gia INTENT---------------------------------------------
-    String User_Name;
-    public static final String Share_User_2 = "name";
+    private String name;
+
     //Telos INTENT-------------------------------------------
 
     //Gia to FireBase-----------------------------------------
@@ -72,7 +69,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
     List<String> myList;
     List<String> TableList;
     // Telos FireBase-----------------------------------------
-
 
     //Gia to StepCounter------------------------------------------------------------------------------------------------------------------------
     private TextView textViewStepDetector;
@@ -105,9 +101,10 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         playerSeekBar.setMax(100);
 
         //Gia to INTENT-----------------------------------------------------------------------------
+
         Intent intent = getIntent();
-        String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
-        User_Name = Name_Activity_1;
+        name = intent.getStringExtra(NAME);
+
 
 
         //Gia to Firebase---------------------------------------------------------------------------
@@ -133,23 +130,16 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         }
         // Telos tou StepCounter--------------------------------------------------------------------
 
-
-
-
-
-
-
-
         btn_next.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                String User_Name = Name_Activity_1;
                 save();
 
 
+
                 Intent intent = new Intent(Move_Skill.this, Game_Activity.class );
-                intent.putExtra(Share_User_2, User_Name);
+                intent.putExtra(Game_Activity.NAME,name);
 
                 mediaPlayer.stop();
                 uploadList(v);
@@ -187,10 +177,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
                 return false;
             }
         });
-
-
-
-
     }
 
     private void  prepareMediaPlayer(){
@@ -236,7 +222,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         } else {
             secondString = "" + seconds;
         }
-
         timerString = timerString + minutes + ":" + secondString;
         return timerString;
 
@@ -276,7 +261,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
             sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
 
     }
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -301,55 +285,9 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
         //Firebase---------------------------------------------------
         rootNode = FirebaseDatabase.getInstance();
-        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Skills");
-        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Skills");
-        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Skills");
-        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Skills");
-        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Skills");
-        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Skills");
-//        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Skills");
-        } else if (User_Name.equals("Panagiwta")||User_Name.equals("Panagiwta ")){reference = rootNode.getReference("Panagiwtas_Skills");
-
-        } else {reference = rootNode.getReference("New_User_Skills");}
-        //reference = rootNode.getReference("Skills");
-        //reference.setValue("llll");
-
+        reference = rootNode.getReference(name).child("Move");
         //Telos FireBase----------------------------------------------
 
-
-        // plhrofories hmera
-        try {
-            //FILE_NAME_SKILLS = LocalDate.now().toString()+"Skill";
-            FILE_NAME_SKILLS = "Skill";
-
-            fos = openFileOutput(FILE_NAME_SKILLS, MODE_APPEND);
-            for (int i=0; i<Table_Skill.size();i++){
-                fos.write((Table_Skill.get(i)+"\n").getBytes());
-            }
-            //fos.write(Table_Skill.get(0).getBytes());
-
-
-            //fos.write(text.getBytes());
-
-
-
-
-
-            Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_NAME_SKILLS, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
     }
     //Telos gia fakelo-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -357,26 +295,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
     public void uploadList(View w){
         //myList.add("12 AA");
         myList.add(Table_Skill.toString());
-
-        //gia na steileis
-        //ArrayList<String> Recent = new ArrayList<>();
-        //DatabaseReference resent = FirebaseDatabase.getInstance().getReference().child("yo");
-        //resent.addValueEventListener(new ValueEventListener() {
-        //@Override
-        //public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        //Recent.clear();
-        //for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-        //  Recent.add(snapshot.getValue().toString());
-        //}
-        //}
-
-        //@Override
-        //public void onCancelled(@NonNull DatabaseError dataseterror) {
-
-        //}
-        //});
-
-
         reference.setValue(myList)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -388,8 +306,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
                     }
 
                 });
-
-
     }
 
     public void TableUpload(View v)
@@ -405,7 +321,6 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
                         String timeName = dss.getValue(String.class);
                         TableList.add(timeName);
                     }
-
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i=0;i<TableList.size(); i++)
                     {
@@ -417,10 +332,8 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
 
             @Override
             public void onCancelled(@NonNull DatabaseError dataseterror) {
-
             }
         });
-
     }
     //Telos Synartisewn tou FireBase---------------------------------------------------------------------------------------
   //Gia thn allagh tou xrwmatos sto activity
@@ -434,8 +347,4 @@ public class Move_Skill extends AppCompatActivity implements SensorEventListener
         }
     }
     //
-
-
-
-
 }

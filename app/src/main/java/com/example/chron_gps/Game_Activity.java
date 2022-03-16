@@ -54,6 +54,9 @@ import java.util.Locale;
 
 public class Game_Activity extends AppCompatActivity implements SensorEventListener {
 
+    public static final String NAME = "NAME";
+
+
     //Gia thn speedcounter
     float totalSpeed=0;
     int number_of_speed_mesurements=0;
@@ -78,9 +81,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     // Telos StepCounter
 
     //Gia INTENT---------------------------------------------
-    String User_Name;
-    public static final String Share_User_3 = "name";
-
+    private String name;
     //Telos INTENT-------------------------------------------
 
     //Gia to FireBase-----------------------------------------
@@ -126,15 +127,10 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     // Google's API for location services. The majority of the app functions using this class.
     FusedLocationProviderClient fusedLocationProviderClient;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-
 
         getSupportActionBar().hide();
 
@@ -159,9 +155,8 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
         //Gia to INTENT-----------------------------------------------------------------------------
         Intent intent = getIntent();
-        String Name_Activity_1 = intent.getStringExtra(Start_Activity.Share_User);
-        User_Name = Name_Activity_1;
-        //Telos INTENT------------------------------------------------------------------------------
+        name = intent.getStringExtra(NAME);
+        //Telos INTENT------------------------------------------------------------------------------//
 
         //Gia to Firebase---------------------------------------------------------------------------
         myList = new ArrayList<>();
@@ -170,9 +165,6 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         //Telos FireBase----------------------------------------------------------------------------
 
         //gps???
-        //tv_sensor = findViewById(R.id.tv_sensor);
-        //tv_updates = findViewById(R.id.tv_updates);
-        //sw_gps_game = findViewById(R.id.sw_gps_game);
         sw_locationupdates_game = findViewById(R.id.sw_locationsupdates_game);
 
         locationRequest = new LocationRequest();
@@ -195,7 +187,6 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
                 updateUIValues(locationResult.getLastLocation());
             }
         };
-
 
         sw_locationupdates_game.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -241,11 +232,9 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                String User_Name = Name_Activity_1;
-                //save(v);
-
+                save(v);
                 Intent intent = new Intent(Game_Activity.this, MainActivity.class );
-                intent.putExtra(Share_User_3, User_Name);
+                intent.putExtra(MainActivity.NAME,name);
 
                 mediaPlayer.stop();
                 uploadList(v);
@@ -344,11 +333,6 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
     //gia gps
     private void stopLocationUpdates() {
-        //tv_updates.setText("Location is NOT being tracked");
-
-        //tv_sensor.setText("Not tracking location");
-
-
         fusedLocationProviderClient.removeLocationUpdates(locationCallBack);
     }
 
@@ -426,16 +410,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         // update all of the text view objects with a ne Location.
 
         rootNode = FirebaseDatabase.getInstance();
-        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Game");
-        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Game");
-        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Game");
-        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
-        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
-        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Levis_Game");
-//        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Game");
-        } else if (User_Name.equals("Panagiwta")||User_Name.equals("Panagiwta ")){reference = rootNode.getReference("Panagiwtas_Game");
-
-        } else {reference = rootNode.getReference("New_User_Game");}
+        reference = rootNode.getReference(name).child("Game");
 
         String Latitude = String.valueOf(location.getLatitude());
         String Longtitude = String.valueOf(location.getLongitude());
@@ -456,44 +431,7 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
         currentTime= new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
         //Table_Game.clear();
         Table_Game.add("Number Of steps: "+stepDetect+" " + "Lat:" + Latitude + " " + "Long:" + Longtitude + " " + "Alt:" + Altitude + " " + "Acc:" + Accuracy + " " + "Speed:" + Speed+ " "+ "totalSpeed:"+ totalSpeed+ " "+"meanSpeed:"+meanSpeed+ " "+"number_of_speed_mesurements:"+number_of_speed_mesurements+ " "+ " Time: "+ currentTime +" Date "+LocalDate.now());
-        //Table_Game.add("Enhmerwsh no:");
 
-
-
-
-
-        try {
-
-            FILE_GAME = LocalDate.now().toString()+"Game";
-            //FILE_GAME = "Game.txt";
-            foss = openFileOutput(FILE_GAME, MODE_APPEND);
-
-            for (int i=0; i< Table_Game.size(); i++)
-                foss.write(((Table_Game.get(i)+"\n").getBytes()));
-            //foss.write((Table.get(Update_pointer).getBytes()));
-            //}
-            //else {
-            //foss.write((Table.get(0).getBytes()));
-
-
-            //}
-
-
-            //Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_GAME, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (foss != null){
-                try {
-                    foss.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
 
     }
 
@@ -507,63 +445,16 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
 
 
         //Firebase---------------------------------------------------
-//        rootNode = FirebaseDatabase.getInstance();
-//        if (User_Name.equals("Chronis")||User_Name.equals("Chronis ")){reference = rootNode.getReference("Chronis_Game");
-//        } else if (User_Name.equals("Xirorafas")||User_Name.equals("Xirorafas ")){reference = rootNode.getReference("Xiro_Game");
-//        } else if (User_Name.equals("Sousanis")||User_Name.equals("Sousanis ")){reference = rootNode.getReference("Sousanis_Game");
-//        } else if (User_Name.equals("Guru")||User_Name.equals("Guru ")){reference = rootNode.getReference("Guru_Game");
-//        } else if (User_Name.equals("Moustakas")||User_Name.equals("Moustakas ")){reference = rootNode.getReference("Moustakas_Game");
-//        } else if (User_Name.equals("Levis")||User_Name.equals("Levis ")){reference = rootNode.getReference("Skills_Game");
-//        } else if (User_Name.equals("Dad")||User_Name.equals("Dad ")){reference = rootNode.getReference("Dadys_Infos");
-//        } else {reference = rootNode.getReference("New_User_Game");}
-        //reference = rootNode.getReference("Game");
-        //reference.setValue("llll");
-
+        rootNode = FirebaseDatabase.getInstance();
+        reference = rootNode.getReference(name).child("Game");
         //Telos FireBase----------------------------------------------
 
-
-        // plhrofories hmera
-        try {
-            FILE_GAME = LocalDate.now().toString()+"Game";
-
-            //FILE_NAME2 = LocalDate.now().toString()+"Errors.txt";
-            fos = openFileOutput(FILE_GAME, MODE_APPEND);
-            for (int i=0; i< Table_Game.size(); i++)
-                fos.write(((Table_Game.get(i)+"\n").getBytes()));
-
-
-            //fos.write(text.getBytes());
-
-
-
-
-
-            //Toast.makeText(this, "Saved to" + getFilesDir() + "/" + FILE_GAME, Toast.LENGTH_LONG).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if (fos != null){
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
     }
 
     // Gia to StepCounter Sinarthseis---------------------------------------------------------------------------------
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        //if (event.sensor == mStepCounter){
-        //stepCount = (int) event.values[0];
-        //textViewStepCounter.setText(String.valueOf(stepCount));
-        //}
-        //else
         if (event.sensor == mStepDetector){
             stepDetect = (int) (stepDetect + event.values[0]);
             //textViewStepDetector.setText(String.valueOf(stepDetect));
@@ -578,9 +469,6 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     @Override
     protected void onResume() {
         super.onResume();
-        //if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null)
-        //sensorManager.registerListener(this, mStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
-
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) !=null)
             sensorManager.registerListener(this, mStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
     }
@@ -599,25 +487,6 @@ public class Game_Activity extends AppCompatActivity implements SensorEventListe
     public void uploadList(View v){
         //myList.add("12 AA");
         myList.add(Table_Game.toString());
-
-        //gia na steileis
-        //ArrayList<String> Recent = new ArrayList<>();
-        //DatabaseReference resent = FirebaseDatabase.getInstance().getReference().child("yo");
-        //resent.addValueEventListener(new ValueEventListener() {
-        //@Override
-        //public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-        //Recent.clear();
-        //for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-        //  Recent.add(snapshot.getValue().toString());
-        //}
-        //}
-
-        //@Override
-        //public void onCancelled(@NonNull DatabaseError dataseterror) {
-
-        //}
-        //});
-
 
         reference.setValue(myList)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

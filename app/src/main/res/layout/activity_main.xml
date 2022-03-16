@@ -86,72 +86,6 @@
             app:fab_title="Chronis" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
-            app:fab_colorNormal="@color/cardview_dark_background"
-            app:fab_colorPressed="@color/av_yellow"
-            app:fab_icon="@drawable/xiro"
-            app:fab_size="mini"
-            app:fab_title="Xiro" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
-            app:fab_colorNormal="@color/cardview_dark_background"
-            app:fab_colorPressed="@color/av_yellow"
-            app:fab_icon="@drawable/moustakas"
-            app:fab_size="mini"
-            app:fab_title="Moustakas" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
-            app:fab_colorNormal="@color/cardview_dark_background"
-            app:fab_colorPressed="@color/av_yellow"
-            app:fab_icon="@drawable/guru"
-            app:fab_size="mini"
-            app:fab_title="Guru" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
-            app:fab_colorNormal="@color/cardview_dark_background"
-            app:fab_colorPressed="@color/av_yellow"
-            app:fab_icon="@drawable/sous"
-            app:fab_size="mini"
-            app:fab_title="Sousanis" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
-            app:fab_colorNormal="@color/cardview_dark_background"
-            app:fab_colorPressed="@color/av_yellow"
-            app:fab_icon="@drawable/levis"
-            app:fab_size="mini"
-            app:fab_title="Levis" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_action7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabCustomSize="@dimen/fab_plus_icon_size"
-            app:fab_colorNormal="@color/cardview_dark_background"
-            app:fab_colorPressed="@color/av_yellow"
-            app:fab_icon="@drawable/panagiwta"
-            app:fab_size="mini"
-            app:fab_title="Panagiwta" />
-
-        <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_action8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -204,26 +138,28 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigator"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:background="#23303A"
-        app:itemTextColor="#7DCCD6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/navigetion_item"
-        tools:ignore="MissingConstraints" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigator2"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="290dp"
         android:background="#23303A"
         app:itemTextColor="#7DCCD6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/navigator"
-        app:menu="@menu/naviget_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/navigetion_item"
         tools:ignore="MissingConstraints" />
+
+<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
+<!--        android:id="@+id/navigator2"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginStart="290dp"-->
+<!--        android:background="#23303A"-->
+<!--        app:itemTextColor="#7DCCD6"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/navigator"-->
+<!--        app:menu="@menu/naviget_2"-->
+<!--        tools:ignore="MissingConstraints" />-->
 
 
 
